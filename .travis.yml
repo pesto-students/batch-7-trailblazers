@@ -5,7 +5,8 @@ cache: yarn
 services:
   - mongodb
 before_script:
-  - echo $DATABASE_CONNECTION_STRING
+  - sleep 15
+  - mongo issues_tracker --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 script:
   - yarn test
 
