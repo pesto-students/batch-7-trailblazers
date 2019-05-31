@@ -9,8 +9,8 @@ export default {
       await mongoose.connect(CONNECTION_URL, { useNewUrlParser: true });
       server.close();
     } catch (exception) {
-      // console.log(`Exception occurred while connecting to Mongo ${exception}`);
-      process.exit(1);
+      console.log(`Exception occurred while connecting to Mongo ${exception}`);
+      // process.exit(1);
     }
   },
 };

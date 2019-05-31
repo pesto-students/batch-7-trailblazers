@@ -15,7 +15,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', router);
-if (process.env.NODE_ENV !== 'test') {
+console.log(`${process.env.NODE_ENV}`);
+console.log(`${process.env.DATABASE_CONNECTION_STRING}`);
+if (process.env.NODE_ENV === 'test') {
   database.connectDB();
 }
 
