@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+import dotenv from ('dotenv');
 
 dotenv.config();
 const { PORT, DATABASE_CONNECTION_STRING } = process.env;
