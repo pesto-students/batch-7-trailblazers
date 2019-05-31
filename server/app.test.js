@@ -13,6 +13,7 @@ describe('httpServer', () => {
     test('should return 200', (done) => {
       http.get(`http://localhost:${port}`, (res) => {
         expect(res.statusCode).toBe(200);
+        server.close();
         done();
       });
     });

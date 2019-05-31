@@ -9,7 +9,7 @@ export default {
       console.log('in Connect DB: DB connection successfull');
     } catch (exception) {
       console.log(`Exception occurred while connecting to Mongo ${exception}`);
-      // process.exit(1);
+      process.exit(1);
     }
   },
 };
