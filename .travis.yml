@@ -2,6 +2,8 @@ language: node_js
 node_js:
   - 12.2.0
 cache: yarn
+echo "print me here"
+echo $NETLIFY_SITE_ID
 script: yarn test
 services:
   - mongodb
