@@ -5,10 +5,10 @@ cache: yarn
 services:
   - mongodb
 before_script:
-  - mongo mydb_test --eval 'use issues-tracker;'
+  - mongo issues-tracker
 script:
-  - yarn test
   - echo $DATABASE_CONNECTION_STRING
+  - yarn test
 
 deploy:
   matrix:
