@@ -2,8 +2,8 @@ language: node_js
 node_js:
   - 12.2.0
 cache: yarn
-script: echo "print me here"
-script: echo $NETLIFY_SITE_ID
+env:
+  DATABASE_CONNECTION_STRING: $DATABASE_CONNECTION_STRING
 script: yarn test
 services:
   - mongodb
