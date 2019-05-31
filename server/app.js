@@ -12,11 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
 app.use('/', router);
 
-
 database.connectDB();
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
-module.exports = app;
+module.exports = server;
