@@ -2,11 +2,13 @@ language: node_js
 node_js:
   - 12.2.0
 cache: yarn
-env:
-  DATABASE_CONNECTION_STRING: $DATABASE_CONNECTION_STRING
-script: yarn test
 services:
   - mongodb
+before_script:
+  - mongo mydb_test --eval 'use issues-tracker;'
+script:
+  - yarn test
+  - echo $DATABASE_CONNECTION_STRING
 
 deploy:
   matrix:
