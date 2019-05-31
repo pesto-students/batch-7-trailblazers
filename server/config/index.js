@@ -1,3 +1,6 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
 const { PORT, DATABASE_CONNECTION_STRING } = process.env;
 
 export default {
