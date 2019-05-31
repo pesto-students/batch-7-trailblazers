@@ -3,6 +3,8 @@ node_js:
   - 12.2.0
 cache: yarn
 script: yarn test
+env:
+  - DATABASE_CONNECTION_STRING=$DATABASE_CONNECTION_STRING
 deploy:
   matrix:
     - provider: script
