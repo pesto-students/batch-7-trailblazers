@@ -5,9 +5,8 @@ cache: yarn
 services:
   - mongodb
 before_script:
-  - mongo issues-tracker
-script:
   - echo $DATABASE_CONNECTION_STRING
+script:
   - yarn test
 
 deploy:
