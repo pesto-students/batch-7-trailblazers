@@ -20,7 +20,8 @@
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "^1.6.0",
     "husky": "^2.3.0",
-    "lint-staged": "^8.1.7"
+    "lint-staged": "^8.1.7",
+    "prettier": "^1.17.1"
   },
   "husky": {
     "hooks": {
@@ -31,5 +32,10 @@
     "*.js": [
       "eslint"
     ]
+  },
+  "scripts": {
+    "test": "yarn test:client && yarn test:server",
+    "test:client": "cd client && yarn && yarn test",
+    "test:server": "cd server && yarn && yarn test"
   }
 }
