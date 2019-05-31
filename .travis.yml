@@ -3,9 +3,6 @@ node_js:
   - 12.2.0
 cache: yarn
 script: yarn test
-env:
-  global:
-    secure: "Jjl2SJoIIbfsbyjBJ13myp2g7ZzYK2hncmqPfaIEqqQZoYu0vL76Ctl1/9vPixjAkpdly9JYPY5GusyoTCKOr1r6EVOTAl+mkOUTA0MCZnKkFgYLQycoFy6WsAeyoHU/y7Zv0OodfU3YFgl4JFwnjQv9tJo3GLTUvVtid5u7f905pOdt61kfrH3f7K8NWe8rnLz3nP9SiSm4FYMRTKLzf2ItAouE2cBkhnNrDbmjnlk+o+F7wZ7Dnps15vhmxoePlvItMXfRXeQtW7rBtcU/s+S89yai6faJNs+U857xhzp837VvjozKsH/mdFFDHb40QQ/gZm+RK2M41QEG96bScsOGN+B8K8Qu7UYmJSRiEPvpy1Z+h4JR+Jz4pS15NBwI1GV6tHJ4ghu/m6Uwhu7tSmA+rsHcapHaKwutYgFwnm/VyH8X9Pxv/e8sSsCMndBJAc9eiMZBNIKjMUO7GqDcvmuuQKmefLmuG4ZLY1pGHBpVF6pfpyCfxrlDai9Dml0PEnI+eSXepBI6FOYIipEgrmRyHtbzVdZSmyXk4WhXYwTUH+9XjseKpOfWdnhNzGFD8/NwgejnaYZ87XIgHqxHfHBBCu1/rnomVR5GEyrxg8lzHliRArl7MWbhEKEUdiw0WOXSuK6NB3WzksKKc8z8Lt9Za1swBdizIKjIw75nnU8="
 deploy:
   matrix:
     - provider: script
