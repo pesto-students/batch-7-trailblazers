@@ -7,6 +7,11 @@ import CheckIcon from '@material-ui/icons/Check';
 
 const findCircularProgress = wrapper => expect(wrapper.find(CircularProgress));
 
+const notHaveCircularProgress = wrapper =>
+  findCircularProgress(wrapper).toHaveLength(0);
+const haveOneCircularProgress = wrapper =>
+  findCircularProgress(wrapper).toHaveLength(1);
+
 describe('<Button />', () => {
   let wrapper;
 
@@ -19,27 +24,27 @@ describe('<Button />', () => {
   });
 
   it('should not show CircularProgress when props not passed.', () => {
-    findCircularProgress(wrapper).toHaveLength(0);
+    notHaveCircularProgress(wrapper);
   });
 
   it('should show CircularProgress when prop: "loading" passed.', () => {
     wrapper.setProps({ loading: true });
-    findCircularProgress(wrapper).toHaveLength(1);
+    haveOneCircularProgress(wrapper);
   });
 
   it('should not show CircularProgress when prop: "success" passed.', () => {
     wrapper.setProps({ success: true, loading: false });
-    findCircularProgress(wrapper).toHaveLength(0);
+    notHaveCircularProgress(wrapper);
   });
 
   it('should not show CircularProgress when prop: "success" & "loading" passed.', () => {
     wrapper.setProps({ success: true, loading: true });
-    findCircularProgress(wrapper).toHaveLength(0);
+    notHaveCircularProgress(wrapper);
   });
 
   it('should show CheckIcon when prop: "success" passed.', () => {
     wrapper.setProps({ success: true });
-    expect(wrapper.find(CheckIcon)).toHaveLength(1);
+    haveOneCircularProgress(wrapper);
   });
 
   it('should not show "text" when props only "loading" passed.', () => {
