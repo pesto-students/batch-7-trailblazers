@@ -15,11 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', router);
-console.log(`${process.env.NODE_ENV}`);
-console.log(`${process.env.DATABASE_CONNECTION_STRING}`);
-if (process.env.NODE_ENV === 'test') {
-  database.connectDB();
-}
+
+database.connectDB();
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
