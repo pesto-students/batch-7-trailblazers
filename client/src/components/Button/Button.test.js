@@ -44,7 +44,7 @@ describe('<Button />', () => {
 
   it('should show CheckIcon when prop: "success" passed.', () => {
     wrapper.setProps({ success: true });
-    haveOneCircularProgress(wrapper);
+    notHaveCircularProgress(wrapper);
   });
 
   it('should not show "text" when props only "loading" passed.', () => {
