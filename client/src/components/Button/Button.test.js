@@ -5,6 +5,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import MDButton from '@material-ui/core/Button';
 import CheckIcon from '@material-ui/icons/Check';
 
+const findCircularProgress = wrapper => expect(wrapper.find(CircularProgress));
+
 describe('<Button />', () => {
   let wrapper;
 
@@ -17,22 +19,22 @@ describe('<Button />', () => {
   });
 
   it('should not show CircularProgress when props not passed.', () => {
-    expect(wrapper.find(CircularProgress)).toHaveLength(0);
+    findCircularProgress(wrapper).toHaveLength(0);
   });
 
   it('should show CircularProgress when prop: "loading" passed.', () => {
     wrapper.setProps({ loading: true });
-    expect(wrapper.find(CircularProgress)).toHaveLength(1);
+    findCircularProgress(wrapper).toHaveLength(1);
   });
 
   it('should not show CircularProgress when prop: "success" passed.', () => {
     wrapper.setProps({ success: true, loading: false });
-    expect(wrapper.find(CircularProgress)).toHaveLength(0);
+    findCircularProgress(wrapper).toHaveLength(0);
   });
 
   it('should not show CircularProgress when prop: "success" & "loading" passed.', () => {
     wrapper.setProps({ success: true, loading: true });
-    expect(wrapper.find(CircularProgress)).toHaveLength(0);
+    findCircularProgress(wrapper).toHaveLength(0);
   });
 
   it('should show CheckIcon when prop: "success" passed.', () => {
@@ -47,7 +49,7 @@ describe('<Button />', () => {
 
   it('should pass rest of the props to Button', () => {
     wrapper.setProps({ strProp: 'testing is cool!' });
-    
+
     const { strProp } = wrapper.find(MDButton).props();
     expect(strProp).toEqual('testing is cool!');
   });
