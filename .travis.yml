@@ -5,9 +5,7 @@ cache: yarn
 script: yarn test
 deploy:
   - provider: script
-    script:
-      netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir
-      ./client/build --prod
+    script: netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir ./client/build --prod
     skip_cleanup: true
     on:
       branch: master
