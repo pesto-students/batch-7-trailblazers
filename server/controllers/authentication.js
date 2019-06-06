@@ -15,7 +15,7 @@ const validateBody = (body) => {
   return error || null;
 };
 
-exports.signUp = async (req, res, next) => {
+const signUp = async (req, res, next) => {
   const error = validateBody(req.body);
   if (error) {
     const [{ message }] = error.details;
@@ -37,9 +37,23 @@ exports.signUp = async (req, res, next) => {
       userId: newlyAddedUser._id,
     });
     await newDahsboard.save();
-    const response = buildResponse(true, []);
+    const response = buildResponse(true, 'Signup successfully!');
     return res.status(200).send(response);
   } catch (err) {
     return next(err);
   }
+};
+
+const login = (req, res, next) => {
+  req.login(req.user.id, (err) => {
+    if (err) return next(err);
+
+    const response = buildResponse(true, 'Login successfully!');
+    return res.status(200).send(response);
+  });
+};
+
+module.exports = {
+  signUp,
+  login,
 };

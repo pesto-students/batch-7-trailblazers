@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import passport from 'passport';
+
 import config from './config';
 import router from './routes';
 import dashboard from './routes/dashboard';
@@ -19,6 +21,9 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(passport.initialize());
+require('./config/passport');
+
 app.use('/', router);
 app.use('/dashboard', dashboard);
 
