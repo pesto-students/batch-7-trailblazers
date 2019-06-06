@@ -39,7 +39,7 @@ const signUp = async (req, res, next) => {
 };
 
 const login = (req, res, next) => {
-  req.login(req.user.id, (err) => {
+  req.login(req.user, (err) => {
     if (err) return next(err);
 
     const response = buildResponse(true, 'Login successfully!');
