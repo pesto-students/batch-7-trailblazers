@@ -1,4 +1,4 @@
-const buildResponse = (isSuccess, message, data = {}) => {
+const buildResponse = (isSuccess, message = '', data = {}) => {
   if (isSuccess) {
     return { isSuccess, message, data };
   }

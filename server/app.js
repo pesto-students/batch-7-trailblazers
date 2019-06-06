@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import passport from 'passport';
+
 import config from './config';
 import router from './routes';
 import database from './config/database';
@@ -18,11 +20,14 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/', router);
 
+app.use(passport.initialize());
+require('./config/passport');
+
+app.use('/', router);
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
-database.connectDB(() => (server.close()));
+database.connectDB(() => server.close());
 
 module.exports = server;
