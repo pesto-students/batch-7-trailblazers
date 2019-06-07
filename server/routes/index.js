@@ -27,11 +27,5 @@ router.post(
   passport.authenticate('local'),
   authentication.login,
 );
-router.post('/dashboard', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.send('isAuthenticated');
-  }
-  res.send('not Authenticated');
-});
 
 module.exports = router;
