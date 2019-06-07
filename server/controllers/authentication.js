@@ -1,6 +1,7 @@
 import User from '../models/userModel';
+import Dashboard from '../models/dashboardModel';
 import { buildResponse, joiValidate } from '../utils/helpers';
-import { SIGNUP_FIELDS_SCHEMA } from '../utils/constants';
+  import { SIGNUP_FIELDS_SCHEMA } from '../utils/constants';
 
 const signUp = async (req, res, next) => {
   const error = joiValidate(req.body, SIGNUP_FIELDS_SCHEMA);
@@ -18,8 +19,14 @@ const signUp = async (req, res, next) => {
       return res.status(400).send(response);
     }
     const user = new User({ name, email, password });
-    await user.save();
+    const newlyAddedUser = await user.save();
+
+    const newDashboard = new Dashboard({
+      userId: newlyAddedUser._id,
+    });
+    await newDashboard.save();
     const response = buildResponse(true, 'Signup successfully!');
+
     return res.status(200).send(response);
   } catch (err) {
     return next(err);
