@@ -70,3 +70,4 @@ const getBoardList = async (req, res) => {
 };
 
 module.exports = { addBoard, getBoardList };
+

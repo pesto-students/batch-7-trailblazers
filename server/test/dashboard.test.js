@@ -19,6 +19,7 @@ describe('Dashboard screen APIs', () => {
 
     afterAll(() => {
       server.close();
+      database.disconnectDB();
     });
 
     test('Should return 404 if user id not passed in params found', (done) => {
@@ -59,7 +60,6 @@ describe('Dashboard screen APIs', () => {
         });
     });
   });
-
   describe('Test boards list  API', () => {
     afterAll(() => {
       server.close();
@@ -97,4 +97,5 @@ describe('Dashboard screen APIs', () => {
         });
     });
   });
+
 });
