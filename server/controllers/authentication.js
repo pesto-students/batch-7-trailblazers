@@ -1,21 +1,9 @@
-import Joi from '@hapi/joi';
 import User from '../models/userModel';
-import { buildResponse } from '../utils/helpers';
-
-const validateBody = (body) => {
-  const schema = Joi.object().keys({
-    name: Joi.string(),
-    email: Joi.string()
-      .email()
-      .required(),
-    password: Joi.string().required(),
-  });
-  const { error } = Joi.validate(body, schema);
-  return error || null;
-};
+import { buildResponse, joiValidate } from '../utils/helpers';
+import { SIGNUP_FIELDS_SCHEMA } from '../utils/constants';
 
 const signUp = async (req, res, next) => {
-  const error = validateBody(req.body);
+  const error = joiValidate(req.body, SIGNUP_FIELDS_SCHEMA);
   if (error) {
     const [{ message }] = error.details;
     const response = buildResponse(false, message);
@@ -41,7 +29,6 @@ const signUp = async (req, res, next) => {
 const login = (req, res, next) => {
   req.login(req.user, (err) => {
     if (err) return next(err);
-
     const response = buildResponse(true, 'Login successfully!');
     return res.status(200).send(response);
   });
