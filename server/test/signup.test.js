@@ -45,14 +45,6 @@ describe('Sign up API test', () => {
       .expect(400, done);
   });
 
-  it('should throw error if email not in correct format', (done) => {
-    requestBody.email = 'bruce';
-    request(server)
-      .post('/signup')
-      .send(requestBody)
-      .expect(400, done);
-  });
-
   it('should throw error if email is existing', (done) => {
     const findOneStub = stub(User, 'findOne').returns('email');
     const saveStub = stub(User.prototype, 'save').returns(null);
