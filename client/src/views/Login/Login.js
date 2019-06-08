@@ -115,7 +115,7 @@ const Login = () => {
 
           <Box textAlign="left">
             <span>Or</span>
-            <Link href="#" variant="body2" className={classes.signUp}>
+            <Link href="/signup" variant="body2" className={classes.signUp}>
               {'Sign Up'}
             </Link>
           </Box>
