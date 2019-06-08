@@ -2,28 +2,40 @@ import React, { Fragment, useEffect, useState } from "react";
 import Board from "./Board";
 import "./../../App.css";
 import { Typography, Grid } from "@material-ui/core";
-import { API_URL } from "./../../constants";
+import { SERVER_URL } from "./../../config";
 import AddBoardModel from "../CommonComponents/Modal";
 import AddBoardForm from "./AddBoardForm";
+import axios from "axios";
 
 export default function Dashboard(props) {
-  // useEffect(() => {
-  //   fetchBoardList();
-  // }, [props]);
-
-  // async function fetchBoardList() {
-  //   try {
-  //     const rawResult = await fetch(
-  //       API_URL + "dashboard/getboards/5cf9425d064475090357aa87"
-  //     );
-  //     const result = rawResult.json();
-  //     console.log(result);
-  //   } catch (exception) {
-  //     console.log(exception);
-  //   }
-  // }
   const [openAddModel, setOpenAddModel] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [ownBoards, setOwnBoards] = useState([]);
+  const [otherBoards, setOtherBoards] = useState([]);
+
+  useEffect(() => {
+    fetchBoardList();
+  }, [props]);
+
+  async function fetchBoardList() {
+    try {
+      const result = await axios(SERVER_URL + "/dashboard/getboards");
+      const boards = result.data.data;
+      if (result.data.isSuccess && boards.ownBoards) {
+        setOwnBoards(boards.ownBoards);
+      } else {
+        setOwnBoards([]);
+      }
+
+      if (result.data.isSuccess && boards.otherBoards) {
+        setOtherBoards(boards.otherBoards);
+      } else {
+        setOtherBoards([]);
+      }
+    } catch (exception) {
+      console.log(exception);
+    }
+  }
 
   function showAddBoardModel() {
     setOpenAddModel(true);
@@ -39,23 +51,19 @@ export default function Dashboard(props) {
 
   const handleBoardSaveClick = function(data) {
     setIsSaving(true);
-    console.log(data);
-    console.log("Savinggg..........");
     saveBoardData(data);
   };
 
   async function saveBoardData(data) {
+    console.log(data);
     try {
-      const rawResult = await fetch(
-        API_URL + "dashboard/add/5cf9425d064475090357aa87",
-        {
-          method: "post",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" }
-        }
-      );
+      const result = await axios({
+        url: `${SERVER_URL}/dashboard/add`,
+        method: "post",
+        data: data,
+        headers: { "Content-Type": "application/json" }
+      });
 
-      const result = await rawResult.json();
       if (result.isSuccess) {
         setIsSaving(false);
         handleModalClose();
@@ -90,7 +98,7 @@ export default function Dashboard(props) {
               Create Board
             </Typography>
           </Board>
-          {[0, 1, 2, 3, 4, 5].map((value, index) => (
+          {ownBoards.map((board, index) => (
             <Board
               key={index}
               showAction={true}
@@ -102,26 +110,43 @@ export default function Dashboard(props) {
                 gutterBottom
                 className="text-color-white"
               >
-                h2. Heading
+                {board.name}
               </Typography>
             </Board>
           ))}
         </Grid>
       </Grid>
-      <Grid container>
-        <Grid item xs={12}>
-          <h3 className="left-margin-25">Others</h3>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12}>
-          <Board showAction={true} backgroundColor="#76a1e8">
-            <Typography variant="h6" gutterBottom className="text-color-white">
-              Pesto
-            </Typography>
-          </Board>
-        </Grid>
-      </Grid>
+      {otherBoards.length > 0 ? (
+        <div>
+          <Grid container>
+            <Grid item xs={12}>
+              <h3 className="left-margin-25">Others</h3>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              {otherBoards.map((board, index) => (
+                <Board
+                  key={index}
+                  showAction={true}
+                  backgroundColor="#76a1e8"
+                  afterClick={goToBoard}
+                >
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    className="text-color-white"
+                  >
+                    {board.name}
+                  </Typography>
+                </Board>
+              ))}
+            </Grid>
+          </Grid>
+        </div>
+      ) : (
+        ""
+      )}
 
       <AddBoardModel
         open={openAddModel}
