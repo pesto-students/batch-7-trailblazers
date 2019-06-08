@@ -1,34 +1,37 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { useFormInput } from '../../customHooks';
+import React from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import axios from "axios";
+import { useFormInput, useSnackBar } from "../../customHooks";
+import { SERVER_URL } from "../../config";
+import { Redirect } from "react-router";
 
 const useStyles = makeStyles(theme => ({
-  '@global': {
+  "@global": {
     body: {
       backgroundColor: theme.palette.common.white
     }
   },
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -39,27 +42,38 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FullLengthOutlinedTextField = (props) => (
+const FullLengthOutlinedTextField = props => (
   <TextField variant="outlined" margin="normal" required fullWidth {...props} />
 );
 
-const Login = () => {
+const Login = props => {
   const classes = useStyles();
 
-  const email = useFormInput('');
-  const password = useFormInput('');
+  const { openSnackBar, closeSnackBar } = useSnackBar();
 
-  const handleFormSubmit = e => {
+  const email = useFormInput("");
+  const password = useFormInput("");
+
+  const showError = message => openSnackBar("error", message);
+
+  const handleFormSubmit = async e => {
     e.preventDefault();
-    fetch('http://localhost:8000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: 'vikalp@gmail.com',
-        password: '123'
-      }),
-      credential: 'include'
-    });
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${SERVER_URL}/login`,
+        data: { email: email.value, password: password.value },
+        headers: { "Content-Type": "application/json" }
+      });
+      console.log(response);
+      if (!response || !response.data)
+        throw new Error("No response from server");
+      if (!response.data.isSuccess) throw new Error(response.data.message);
+      props.history.push("/dashboard");
+    } catch (err) {
+      showError(err.message);
+    }
   };
 
   return (
@@ -102,8 +116,8 @@ const Login = () => {
 
           <Box textAlign="left">
             <span>Or</span>
-            <Link href="#" variant="body2" className={classes.signUp}>
-              {'Sign Up'}
+            <Link href="/signup" variant="body2" className={classes.signUp}>
+              {"Sign Up"}
             </Link>
           </Box>
         </form>

@@ -1,13 +1,23 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import Login from "./views/Login";
+import Signup from "./components/SignUp";
+import SnackBarProvider from "./context/SnackBarProvider";
 import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   return (
-    <div>
-      <Dashboard />
-    </div>
+    <SnackBarProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Login} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/dashboard" component={Dashboard} />
+        </Switch>
+      </Router>
+    </SnackBarProvider>
   );
 }
 

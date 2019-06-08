@@ -54,7 +54,7 @@ const addBoard = async (req, res) => {
 
 const getBoardList = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.params.id;
     const dashboard = await Dashboard.findOne({ userId }).populate({
       path: 'boards',
       select: { name: 1, owner: 1 },
@@ -63,14 +63,7 @@ const getBoardList = async (req, res) => {
         select: { name: 1 },
       },
     });
-    const otherBoards = [];
-    const ownBoards = dashboard.boards.filter((board) => {
-      if (!board.owner._id.equals(userId)) {
-        otherBoards.push(board);
-      }
-      return board.owner._id.equals(userId);
-    });
-    res.send(buildResponse(true, '', { ownBoards, otherBoards }));
+    res.send(buildResponse(true, '', dashboard.boards));
   } catch (exception) {
     res.status(500).send(buildResponse(false, `${exception}`));
   }

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,9 +9,9 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import axios from 'axios';
-import {SERVER_URL} from "../../../config";
-import {Redirect} from 'react-router'
+import axios from "axios";
+import { SERVER_URL } from "../../config";
+import { Redirect } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -36,51 +36,49 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2)
   },
-  errorMessage : {
-    "text-align" : "center",
-    color : "red",
+  errorMessage: {
+    "text-align": "center",
+    color: "red"
   }
 }));
 
 export default function SignUp() {
   const classes = useStyles();
 
-  const [user,setUser] = useState ({name :"", email:"",password: ""});
-  const [errorMessage, setErrorMessage] = useState('');
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState("");
   const [signUpSuccess, setSignUpSucess] = useState(false);
 
   const handleEmailChange = evt => {
-    setUser({...user,email :evt.target.value});
+    setUser({ ...user, email: evt.target.value });
   };
 
   const handlePasswordChange = evt => {
-    setUser({...user, password:evt.target.value});
+    setUser({ ...user, password: evt.target.value });
   };
 
   const handleNameChange = evt => {
-    setUser({...user, name : evt.target.value});
+    setUser({ ...user, name: evt.target.value });
   };
 
-  const postData = async (e) => {
+  const postData = async e => {
     console.log(user);
     e.preventDefault();
     try {
-    const response = await axios({
-      method : 'post',
-      url : `${SERVER_URL}/signup`,
-      data : {...user},
-      headers: { "Content-Type": "application/json" },
-    });
-    console.log(response);
-    if(response && response.data && response.data.isSuccess) {
-      setErrorMessage('');
-      setSignUpSucess(true);
+      const response = await axios({
+        method: "post",
+        url: `${SERVER_URL}/signup`,
+        data: { ...user },
+        headers: { "Content-Type": "application/json" }
+      });
+      console.log(response);
+      if (response && response.data && response.data.isSuccess) {
+        setErrorMessage("");
+        setSignUpSucess(true);
+      }
+    } catch (err) {
+      setErrorMessage(err.response.data.message);
     }
-
-  } catch (err) {
-    setErrorMessage(err.response.data.message);
-  }
-
   };
 
   return (
@@ -105,7 +103,7 @@ export default function SignUp() {
                 id="firstName"
                 label="Name"
                 autoFocus
-                onChange ={handleNameChange}
+                onChange={handleNameChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -130,11 +128,15 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange ={handlePasswordChange}
+                onChange={handlePasswordChange}
               />
             </Grid>
             <Grid item xs={12}>
-              {errorMessage ? <p className= {classes.errorMessage}>{errorMessage}</p> : ''}
+              {errorMessage ? (
+                <p className={classes.errorMessage}>{errorMessage}</p>
+              ) : (
+                ""
+              )}
             </Grid>
           </Grid>
           <Button
@@ -146,7 +148,7 @@ export default function SignUp() {
           >
             Sign Up
           </Button>
-          {signUpSuccess && <Redirect to="/login"></Redirect>}
+          {signUpSuccess && <Redirect to="/login" />}
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
@@ -157,6 +159,5 @@ export default function SignUp() {
         </form>
       </div>
     </Container>
-  
   );
 }

@@ -32,7 +32,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors());
+app.use('*', cors());
 require('./config/passport');
 
 app.use('/', router);
