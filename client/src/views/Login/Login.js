@@ -9,7 +9,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useFormInput } from '../../customHooks';
+import axios from 'axios';
+import { useFormInput, useSnackBar } from '../../customHooks';
+import { SERVER_URL } from '../../config';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -39,27 +41,38 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FullLengthOutlinedTextField = (props) => (
+const FullLengthOutlinedTextField = props => (
   <TextField variant="outlined" margin="normal" required fullWidth {...props} />
 );
 
 const Login = () => {
   const classes = useStyles();
 
+  const { openSnackBar, closeSnackBar } = useSnackBar();
+
   const email = useFormInput('');
   const password = useFormInput('');
 
-  const handleFormSubmit = e => {
+  const showError = message => openSnackBar('error', message);
+
+  const handleFormSubmit = async e => {
     e.preventDefault();
-    fetch('http://localhost:8000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: 'vikalp@gmail.com',
-        password: '123'
-      }),
-      credential: 'include'
-    });
+
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${SERVER_URL}/login`,
+        data: { email, password },
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      });
+
+      if (!response || !response.data)
+        throw new Error('No response from server');
+      if (!response.data.isSuccess) throw new Error(response.data.message);
+    } catch (err) {
+      showError(err.message);
+    }
   };
 
   return (

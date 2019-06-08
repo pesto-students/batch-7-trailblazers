@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import SnackBarContext from '../context/SnackBarContext';
 
 export const useFormInput = initialValue => {
   const [value, setValue] = useState(initialValue);
@@ -9,4 +10,10 @@ export const useFormInput = initialValue => {
     value,
     onChange
   };
+};
+
+export const useSnackBar = () => {
+  const { openSnackBar, closeSnackBar } = useContext(SnackBarContext);
+  
+  return { openSnackBar, closeSnackBar };
 };
