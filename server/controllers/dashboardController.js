@@ -22,7 +22,7 @@ async function addBoardToDashboard(userId, boardId) {
       return true;
     }
   } catch (exception) {
-    console.log(exception);
+    return false;
   }
   return false;
 }
@@ -35,7 +35,7 @@ const addBoard = async (req, res) => {
       const response = buildResponse(false, message);
       return res.status(400).send(response);
     }
-    const userId = req.params.id;
+    const userId = req.user.id;
     const owner = userId;
     const newBoard = {
       ...req.body,
@@ -43,14 +43,36 @@ const addBoard = async (req, res) => {
       members: [{ userId, role: constants.ROLE_ENUM.SUPER_ADMIN }],
     };
     const boardModel = new Board(newBoard);
-    console.log(boardModel);
     const resBoard = await boardModel.save();
-    console.log('some');
     await addBoardToDashboard(userId, resBoard._id);
     return res.status(200).send(buildResponse(true, 'successfully added Board'));
   } catch (exception) {
-    res.status(500).send(buildResponse(false, `Error occured, ${exception}`));
+    return res.status(500).send(buildResponse(false, `Error occured, ${exception}`));
   }
 };
 
-module.exports = { addBoard };
+const getBoardList = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const dashboard = await Dashboard.findOne({ userId }).populate({
+      path: 'boards',
+      select: { name: 1, owner: 1 },
+      populate: {
+        path: 'owner',
+        select: { name: 1 },
+      },
+    });
+    const otherBoards = [];
+    const ownBoards = dashboard.boards.filter((board) => {
+      if (!board.owner._id.equals(userId)) {
+        otherBoards.push(board);
+      }
+      return board.owner._id.equals(userId);
+    });
+    res.send(buildResponse(true, '', { ownBoards, otherBoards }));
+  } catch (exception) {
+    res.status(500).send(buildResponse(false, `${exception}`));
+  }
+};
+
+module.exports = { addBoard, getBoardList };
