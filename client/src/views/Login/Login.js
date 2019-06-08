@@ -12,6 +12,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { useFormInput, useSnackBar } from '../../customHooks';
 import { SERVER_URL } from '../../config';
+import {Redirect} from 'react-router'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -45,7 +46,7 @@ const FullLengthOutlinedTextField = props => (
   <TextField variant="outlined" margin="normal" required fullWidth {...props} />
 );
 
-const Login = () => {
+const Login = (props) => {
   const classes = useStyles();
 
   const { openSnackBar, closeSnackBar } = useSnackBar();
@@ -62,14 +63,15 @@ const Login = () => {
       const response = await axios({
         method: 'post',
         url: `${SERVER_URL}/login`,
-        data: { email, password },
+        data: { email: email.value, password:password.value },
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
       });
-
+      console.log(response);
       if (!response || !response.data)
         throw new Error('No response from server');
       if (!response.data.isSuccess) throw new Error(response.data.message);
+      props.history.push('/dashboard')
+      
     } catch (err) {
       showError(err.message);
     }

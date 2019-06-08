@@ -5,7 +5,7 @@ import { Typography, Grid } from "@material-ui/core";
 import { API_URL } from "./../../constants";
 import AddBoardModel from "../CommonComponents/Modal";
 import AddBoardForm from "./AddBoardForm";
-
+import {SERVER_URL} from './../../config'
 export default function Dashboard(props) {
   // useEffect(() => {
   //   fetchBoardList();
@@ -24,6 +24,13 @@ export default function Dashboard(props) {
   // }
   const [openAddModel, setOpenAddModel] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    fetch(`${SERVER_URL}/`,{
+      method : 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+  },[])
 
   function showAddBoardModel() {
     setOpenAddModel(true);
