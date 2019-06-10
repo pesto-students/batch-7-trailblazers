@@ -45,7 +45,7 @@ const FullLengthOutlinedTextField = props => (
   <TextField variant="outlined" margin="normal" required fullWidth {...props} />
 );
 
-const Login = () => {
+const Login = props => {
   const classes = useStyles();
 
   const { openSnackBar, closeSnackBar } = useSnackBar();
@@ -62,14 +62,16 @@ const Login = () => {
       const response = await axios({
         method: 'post',
         url: `${SERVER_URL}/login`,
-        data: { email, password },
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
+        data: { email: email.value, password: password.value },
+        headers: { 'Content-Type': 'application/json' }
       });
 
-      if (!response || !response.data)
+      if (!response || !response.data) {
         throw new Error('No response from server');
+      }
       if (!response.data.isSuccess) throw new Error(response.data.message);
+
+      props.history.push('/dashboard');
     } catch (err) {
       showError(err.message);
     }
@@ -115,7 +117,7 @@ const Login = () => {
 
           <Box textAlign="left">
             <span>Or</span>
-            <Link href="#" variant="body2" className={classes.signUp}>
+            <Link href="/signup" variant="body2" className={classes.signUp}>
               {'Sign Up'}
             </Link>
           </Box>
