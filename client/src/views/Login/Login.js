@@ -47,14 +47,12 @@ const FullLengthOutlinedTextField = props => (
 
 const Login = props => {
   const classes = useStyles();
-
   const { openSnackBar, closeSnackBar } = useSnackBar();
 
   const email = useFormInput('');
   const password = useFormInput('');
 
   const showError = message => openSnackBar('error', message);
-
   const handleFormSubmit = async e => {
     e.preventDefault();
 

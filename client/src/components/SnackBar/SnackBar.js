@@ -13,8 +13,6 @@ const SnackBar = ({
     open = false;
   }
 }) => {
-  console.log(typeof message, message);
-
   return (
     <MDSnackbar
       open={open}
