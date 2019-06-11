@@ -14,7 +14,8 @@ import {
 } from "@material-ui/core";
 import "./settings.css";
 import "./../../../App.css";
-//import axios from "axios";
+import axios from "axios";
+import { useSnackBar } from "./../../../customHooks";
 
 const MemberList = function(props) {
   const boardMembers = [
@@ -45,6 +46,7 @@ const MemberList = function(props) {
   ];
   const [members, setMembers] = useState(boardMembers);
   const [isDataLoaded, setDataLoaded] = useState(true);
+  const { openSnackBar, closeSnackBar } = useSnackBar();
   setTimeout(() => {
     setDataLoaded(false);
   }, 3000);
@@ -75,6 +77,7 @@ const MemberList = function(props) {
     //   member: boardMembers[index].user._id
     // });
     setMembers(boardMembers);
+    openSnackBar("success", "Role changed");
   };
   return isDataLoaded ? (
     <CircularProgress className="loader-center" />
