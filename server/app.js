@@ -41,6 +41,7 @@ app.use('/', router);
 app.use('/dashboard', dashboard);
 app.use('/board', boardSettings);
 app.use('/board', board);
+app.use('/board', boardSettings);
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
