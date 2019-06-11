@@ -43,6 +43,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const CloseAction = ({ onClose }) => {
+  const { icon } = useStyles();
+  return (
+    <IconButton
+      key="close"
+      aria-label="Close"
+      color="inherit"
+      onClick={onClose}
+    >
+      <CloseIcon className={icon} />
+    </IconButton>
+  );
+};
+
 const SnackBarContentWrapper = React.forwardRef((props, ref) => {
   const classes = useStyles();
   const { message, onClose, variant, ...other } = props;
@@ -61,16 +75,7 @@ const SnackBarContentWrapper = React.forwardRef((props, ref) => {
         </span>
       }
       ref={ref}
-      action={[
-        <IconButton
-          key="close"
-          aria-label="Close"
-          color="inherit"
-          onClick={onClose}
-        >
-          <CloseIcon className={classes.icon} />
-        </IconButton>
-      ]}
+      action={[<CloseAction onClose={onClose} />]}
       {...other}
     />
   );
