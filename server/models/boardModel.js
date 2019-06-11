@@ -1,19 +1,22 @@
 import mongoose from 'mongoose';
 import autoIncrementId from './autoIncrementModel';
+import constants from '../config/constants';
 
 const { Schema } = mongoose;
-const MemberSchema = new Schema({
-  userId: { type: String, required: true },
-  role: { type: Number },
-});
 
 const BoardSchema = new Schema({
   id: { type: Number },
   name: { type: String, required: true },
   owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  lifecycles: [{ type: String, unique: true }],
+  lifecycles: [{ type: String }],
   issues: { type: Array, default: [] },
-  members: { type: [MemberSchema], default: [] },
+  members: [
+    {
+      user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      role: { type: String, enum: Object.values(constants.ROLES_ENUM) },
+      addedOn: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 async function preProcess(next) {

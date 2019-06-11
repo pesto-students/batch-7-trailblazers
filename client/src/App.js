@@ -1,13 +1,16 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Dashboard from "./components/Dashboard/Dashboard";
+
+import React from 'react';
+import './App.css';
+import Login from './views/Login';
+import SnackBarProvider from './context/SnackBarProvider';
 
 function App() {
   return (
-    <div>
-      <Dashboard />
-    </div>
+    <SnackBarProvider>
+      <div className="App">
+        <Login />
+      </div>
+    </SnackBarProvider>
   );
 }
 

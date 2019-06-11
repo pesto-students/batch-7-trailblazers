@@ -7,6 +7,10 @@ import Dashboard from '../models/dashboardModel';
 
 server.close();
 describe('Dashboard screen APIs', () => {
+  beforeEach(() => {
+    server.close();
+    database.disconnectDB();
+  });
   describe('Add dashboard API', () => {
     let requestBody;
     const userId = '5cf9425d064475090357aa87';
@@ -57,6 +61,47 @@ describe('Dashboard screen APIs', () => {
           save.restore();
           findOneDashboard.restore();
           return done();
+        });
+    });
+  });
+  describe('Test boards list  API', () => {
+    afterAll(() => {
+      server.close();
+      database.disconnectDB();
+    });
+    const userId = '5cf9425d064475090357aa87';
+    const resultObject = {
+      isSuccess: true,
+      message: '',
+      data: [
+        {
+          name: 'amazon',
+          owner: {
+            _id: '5cf9425d064475090357aa87',
+            name: 'manish zanzad',
+          },
+        },
+        {
+          name: 'flipkat',
+          owner: {
+            _id: '5cf9425d064475090357aa87',
+            name: 'manish zanzad',
+          },
+        },
+      ],
+    };
+
+    test('Should return 200', (done) => {
+      const findOneDashboard = stub(Dashboard, 'findOne').returns(resultObject);
+      const populateDashboard = stub(Dashboard.prototype, 'populate').returns(resultObject);
+      
+      request(server)
+        .get(`/dashboard/getboards/${userId}`)
+        .expect(200, () => {
+          findOneDashboard.restore();
+          populateDashboard.restore();
+
+          done();
         });
     });
   });

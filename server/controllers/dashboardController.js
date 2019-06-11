@@ -9,6 +9,7 @@ function validateBoard(request) {
     name: Joi.string().required(),
     lifecycles: Joi.array()
       .items(Joi.string().required())
+      .unique()
       .required(),
   });
   const { error } = Joi.validate(request, validationSchema);
@@ -40,7 +41,7 @@ const addBoard = async (req, res) => {
     const newBoard = {
       ...req.body,
       owner,
-      members: [{ userId, role: constants.ROLE_ENUM.SUPER_ADMIN }],
+      members: [{ user: userId, role: constants.ROLES_ENUM.SUPER_ADMIN }],
     };
     const boardModel = new Board(newBoard);
     const resBoard = await boardModel.save();
@@ -77,4 +78,21 @@ const getBoardList = async (req, res) => {
   }
 };
 
+
+const getBoardList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const dashboard = await Dashboard.findOne({ userId }).populate({
+      path: 'boards',
+      select: { name: 1, owner: 1 },
+      populate: {
+        path: 'owner',
+        select: { name: 1 },
+      },
+    });
+    res.send(buildResponse(true, '', dashboard.boards));
+  } catch (exception) {
+    res.status(500).send(buildResponse(false, `${exception}`));
+  }
+};
 module.exports = { addBoard, getBoardList };

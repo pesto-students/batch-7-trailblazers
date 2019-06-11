@@ -28,17 +28,28 @@ const useStyles = makeStyles(theme => ({
     left: "50%",
     marginTop: -12,
     marginLeft: -12
+  },
+  hideText: {
+    opacity: 0
   }
 }));
 
 const Button = ({
-  children = "",
+
+  variant = 'contained',
+  children = '',
   loading = false,
   success = false,
   disable = false,
   ...rest
 }) => {
-  const { root, wrapper, buttonProgress, buttonSuccess } = useStyles();
+  const {
+    root,
+    wrapper,
+    buttonProgress,
+    buttonSuccess,
+    hideText
+  } = useStyles();
 
   const buttonClassName = success ? buttonSuccess : "";
   if (success) loading = false;
@@ -47,13 +58,17 @@ const Button = ({
     <div className={root}>
       <div className={wrapper}>
         <MDButton
-          variant="contained"
+          variant={variant}
           className={buttonClassName}
           disabled={loading || disable}
           {...rest}
         >
           {success && <CheckIcon />}
-          {!loading && children}
+          {loading
+            ? React.Children.map(children, child =>
+                React.cloneElement(child, { className: hideText })
+              )
+            : children}
         </MDButton>
         {loading && <CircularProgress size={24} className={buttonProgress} />}
       </div>
