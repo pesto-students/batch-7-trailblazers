@@ -53,7 +53,7 @@ const Button = ({
           {...rest}
         >
           {success && <CheckIcon />}
-          {children}
+          {!loading && children}
         </MDButton>
         {loading && <CircularProgress size={24} className={buttonProgress} />}
       </div>

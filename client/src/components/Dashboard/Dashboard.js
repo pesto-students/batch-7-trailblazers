@@ -15,22 +15,20 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     fetchBoardList();
-  }, [props]);
+  }, [fetchBoardList, props]);
 
   async function fetchBoardList() {
     try {
       const result = await axios(SERVER_URL + "/dashboard/getboards");
       const boards = result.data.data;
-      if (result.data.isSuccess && boards.ownBoards) {
-        setOwnBoards(boards.ownBoards);
+
+      if (result.data.isSuccess) {
+        const { ownBoards = [], otherBoards = [] } = boards;
+        setOwnBoards(ownBoards);
+        otherBoards(otherBoards);
       } else {
         setOwnBoards([]);
-      }
-
-      if (result.data.isSuccess && boards.otherBoards) {
-        setOtherBoards(boards.otherBoards);
-      } else {
-        setOtherBoards([]);
+        otherBoards([]);
       }
     } catch (exception) {
       console.log(exception);
@@ -60,7 +58,7 @@ export default function Dashboard(props) {
       const result = await axios({
         url: `${SERVER_URL}/dashboard/add`,
         method: "post",
-        data: data,
+        data,
         headers: { "Content-Type": "application/json" }
       });
 
