@@ -3,7 +3,11 @@ import { buildResponse } from '../utils/helpers';
 import {} from '../models/issuesModel';
 
 const getBoardDetails = async (req, res) => {
+try {
   const id = parseInt(req.params.id, 10);
+} catch (err) {
+   // unable to parse, it must be not a number.
+}
   if (typeof id !== 'number') {
     res.status(400).send(buildResponse(false, `${req.params.id} should be a number`));
   }
