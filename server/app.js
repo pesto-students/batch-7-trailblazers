@@ -7,6 +7,7 @@ import cors from 'cors';
 import config from './config';
 import router from './routes';
 import dashboard from './routes/dashboard';
+import boardSettings from './routes/boardSettings';
 import database from './config/database';
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/', router);
 app.use('/dashboard', dashboard);
+app.use('/board', boardSettings);
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
