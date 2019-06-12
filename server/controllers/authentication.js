@@ -4,17 +4,13 @@ import { buildResponse, joiValidate } from '../utils/helpers';
 import { SIGNUP_FIELDS_SCHEMA } from '../utils/constants';
 
 const signUp = async (req, res, next) => {
-  const error = joiValidate(req.body, SIGNUP_FIELDS_SCHEMA);
-  if (error) {
-    const [{ message }] = error.details;
-    const response = buildResponse(false, message);
-    return res.status(400).send(response);
-  }
+  joiValidate(req, res, SIGNUP_FIELDS_SCHEMA);
+
   const { email, name, password } = req.body;
   try {
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      const errorMessage = `Email '${email}' already in use`;
+      const errorMessage = 'This email is already in use!';
       const response = buildResponse(false, errorMessage);
       return res.status(400).send(response);
     }
