@@ -13,6 +13,7 @@ import dashboard from './routes/dashboard';
 import boardSettings from './routes/boardSettings';
 import database from './config/database';
 import board from './routes/board';
+import issueRoutes from './routes/issue';
 
 const milliSecondsInADay = 8640000;
 
@@ -46,6 +47,7 @@ app.use('/', router);
 app.use('/dashboard', dashboard);
 app.use('/board', boardSettings);
 app.use('/board', board);
+app.use('/issue', issueRoutes);
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
