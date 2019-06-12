@@ -25,6 +25,7 @@ const getMembers = async function (req, res) {
 
     return res.send(buildResponse(true, '', board.members));
   } catch (exception) {
+    console.log(exception);
     return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
@@ -59,6 +60,7 @@ const updateMemberRole = async function (req, res) {
     );
     return res.send(buildResponse(true, 'Member role updated successfully'));
   } catch (exception) {
+    console.log(exception);
     return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
@@ -95,6 +97,7 @@ const deleteMember = async function (req, res) {
 
     return res.send(buildResponse(true, 'Member deleted successfully'));
   } catch (exception) {
+    console.log(exception);
     return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
