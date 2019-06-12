@@ -16,7 +16,8 @@ router.post('/signup', authentication.signUp);
 router.post(
   '/login',
   (req, res, next) => {
-    joiValidate(req, res, LOGIN_FIELDS_SCHEMA);
+    const [isValid, response] = joiValidate(req.body, LOGIN_FIELDS_SCHEMA);
+    if (!isValid) res.status(400).send(response);
     next();
   },
   passport.authenticate('local'),

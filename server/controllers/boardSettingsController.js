@@ -10,7 +10,8 @@ import {
 
 const getMembers = async (req, res) => {
   try {
-    joiValidate(req.params, res, GET_MEMBERS);
+    const [isValid, response] = joiValidate(req.params, GET_MEMBERS);
+    if (!isValid) return res.status(400).send(response);
 
     const boardId = req.params.id;
     const board = await Board.findOne({ id: boardId }, { members: 1 }).populate(
@@ -30,7 +31,11 @@ const getMembers = async (req, res) => {
 
 const updateMemberRole = async (req, res) => {
   try {
-    joiValidate({ ...req.body, id: req.params.id }, res, UPDATE_MEMBER_ROLE);
+    const [isValid, response] = joiValidate(
+      { ...req.body, id: req.params.id },
+      UPDATE_MEMBER_ROLE,
+    );
+    if (!isValid) return res.status(400).send(response);
 
     const boardId = req.params.id;
     const newRole = req.body.role;
@@ -51,7 +56,8 @@ const updateMemberRole = async (req, res) => {
 
 const deleteMember = async (req, res) => {
   try {
-    joiValidate({ ...req.body, id: req.params.id }, DELETE_MEMBER);
+    const [isValid, response] = joiValidate({ ...req.body, id: req.params.id }, DELETE_MEMBER);
+    if (!isValid) return res.status(400).send(response);
 
     // check login user is admin or superadmin - pending
     const boardId = req.params.id;
