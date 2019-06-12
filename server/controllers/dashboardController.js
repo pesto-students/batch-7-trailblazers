@@ -1,20 +1,7 @@
-import Joi from '@hapi/joi';
 import Board from '../models/boardModel';
 import Dashboard from '../models/dashboardModel';
-import { buildResponse } from '../utils/helpers';
-import { ROLES_ENUM } from '../utils/constants';
-
-function validateBoard(request) {
-  const validationSchema = Joi.object().keys({
-    name: Joi.string().required(),
-    lifeCycles: Joi.array()
-      .items(Joi.string().required())
-      .unique()
-      .required(),
-  });
-  const { error } = Joi.validate(request, validationSchema);
-  return error;
-}
+import { buildResponse, joiValidate } from '../utils/helpers';
+import { ADD_BOARD, ROLES_ENUM } from '../utils/constants';
 
 async function addBoardToDashboard(userId, boardId) {
   try {
@@ -29,14 +16,9 @@ async function addBoardToDashboard(userId, boardId) {
 }
 const addBoard = async (req, res) => {
   try {
-    const error = validateBoard(req.body);
+    joiValidate(req.body, res, ADD_BOARD);
 
-    if (error) {
-      const [{ message }] = error.details;
-      const response = buildResponse(false, message);
-      return res.status(400).send(response);
-    }
-    const userId = req.user.id;
+    const userId = req.params.id;
     const owner = userId;
     const newBoard = {
       ...req.body,

@@ -6,7 +6,7 @@ import { ISSUE_CHANGE_LIFECYCLE_SCHEMA } from '../utils/constants';
 const { ObjectId } = mongoose.Types;
 
 const changeLifeCycle = async (req, res, next) => {
-  joiValidate(req, res, ISSUE_CHANGE_LIFECYCLE_SCHEMA);
+  joiValidate(req.body, res, ISSUE_CHANGE_LIFECYCLE_SCHEMA);
 
   const { _id, lifeCycle } = req.body;
 
