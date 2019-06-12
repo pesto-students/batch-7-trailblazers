@@ -77,22 +77,4 @@ const getBoardList = async (req, res) => {
     res.status(500).send(buildResponse(false, `${exception}`));
   }
 };
-
-
-const getBoardList = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const dashboard = await Dashboard.findOne({ userId }).populate({
-      path: 'boards',
-      select: { name: 1, owner: 1 },
-      populate: {
-        path: 'owner',
-        select: { name: 1 },
-      },
-    });
-    res.send(buildResponse(true, '', dashboard.boards));
-  } catch (exception) {
-    res.status(500).send(buildResponse(false, `${exception}`));
-  }
-};
 module.exports = { addBoard, getBoardList };
