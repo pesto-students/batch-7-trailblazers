@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
 import axios from 'axios';
-import { SERVER_URL } from '../../config';
 import LifeCycleColumn from '../LifeCycleColumn';
+import { SERVER_URL } from '../../config';
 import { useSnackBar } from '../../customHooks';
+import { DragDropContext } from 'react-beautiful-dnd';
+import './KanbanView.css';
 
 const KanbanView = () => {
   const [lifeCycles, setLifeCycles] = useState([]);
@@ -16,7 +17,7 @@ const KanbanView = () => {
     try {
       const res = await axios.get(`${SERVER_URL}/board/`);
       if (!res || !res.data) throw new Error('No response from server');
-      if (!res.data.isSuccess) throw new Error(res.data.message);
+      if (!res.isSuccess) throw new Error(res.data.message);
 
       setLifeCycles(res.data.lifeCycles);
     } catch (err) {
@@ -45,9 +46,13 @@ const KanbanView = () => {
     const startIssues = Array.from(startLifeCycle);
     const issue = startIssues[source.index];
 
-    axios.post(`${SERVER_URL}/issue/${issue._id}`, {
-      lifeCycle: finishLifeCycleName
-    });
+    if (startLifeCycleName !== finishLifeCycleName) {
+      const { _id } = issue;
+      axios.post(`${SERVER_URL}/issue/changeLifeCycle`, {
+        _id,
+        lifeCycle: finishLifeCycleName
+      });
+    }
   };
 
   const lifeCycleColumns = Object.entries(lifeCycles).map(([key, value]) => (
