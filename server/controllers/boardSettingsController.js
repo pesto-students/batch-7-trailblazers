@@ -1,18 +1,11 @@
-import Joi from '@hapi/joi';
 import Board from '../models/boardModel';
 import constants from '../config/constants';
-import { buildResponse } from '../utils/helpers';
-const getMembers = async function (req, res) {
+import { buildResponse, joiValidate } from '../utils/helpers';
+import { GET_MEMBERS, UPDATE_MEMBER_ROLE, DELETE_MEMBER } from '../utils/constants';
+
+const getMembers = async (req, res) => {
   try {
-    const validationSchema = Joi.object().keys({
-      id: Joi.number().required(),
-    });
-    const { error } = Joi.validate({ id: req.params.id }, validationSchema);
-    if (error) {
-      const [{ message }] = error.details;
-      const response = buildResponse(false, message);
-      return res.status(400).send(response);
-    }
+    joiValidate(req.params, res, GET_MEMBERS);
 
     const boardId = req.params.id;
     const board = await Board.findOne({ id: boardId }, { members: 1 }).populate(
@@ -30,19 +23,9 @@ const getMembers = async function (req, res) {
   }
 };
 
-const updateMemberRole = async function (req, res) {
+const updateMemberRole = async (req, res) => {
   try {
-    const validationSchema = Joi.object().keys({
-      id: Joi.number().required(),
-      member: Joi.string().required(),
-      role: Joi.string().required(),
-    });
-    const { error } = Joi.validate({ ...req.body, id: req.params.id }, validationSchema);
-    if (error) {
-      const [{ message }] = error.details;
-      const response = buildResponse(false, message);
-      return res.status(400).send(response);
-    }
+    joiValidate({ ...req.body, id: req.params.id }, res, UPDATE_MEMBER_ROLE);
 
     const boardId = req.params.id;
     const newRole = req.body.role;
@@ -50,13 +33,9 @@ const updateMemberRole = async function (req, res) {
     if (!constants.ROLES_ENUM[newRole]) {
       res.status(406).send(buildResponse(false, 'Role does not exist'));
     }
-    const board = await Board.findOneAndUpdate(
+    await Board.findOneAndUpdate(
       { id: boardId, 'members.user': member },
-      {
-        $set: {
-          'members.$.role': newRole,
-        },
-      },
+      { $set: { 'members.$.role': newRole } },
     );
     return res.send(buildResponse(true, 'Member role updated successfully'));
   } catch (exception) {
@@ -65,18 +44,9 @@ const updateMemberRole = async function (req, res) {
   }
 };
 
-const deleteMember = async function (req, res) {
+const deleteMember = async (req, res) => {
   try {
-    const validationSchema = Joi.object().keys({
-      id: Joi.number().required(),
-      member: Joi.string().required(),
-    });
-    const { error } = Joi.validate({ ...req.body, id: req.params.id }, validationSchema);
-    if (error) {
-      const [{ message }] = error.details;
-      const response = buildResponse(false, message);
-      return res.status(400).send(response);
-    }
+    joiValidate({ ...req.body, id: req.params.id }, DELETE_MEMBER);
 
     // check login user is admin or superadmin - pending
     const boardId = req.params.id;

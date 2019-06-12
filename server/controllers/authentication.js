@@ -4,7 +4,7 @@ import { buildResponse, joiValidate } from '../utils/helpers';
 import { SIGNUP_FIELDS_SCHEMA } from '../utils/constants';
 
 const signUp = async (req, res, next) => {
-  joiValidate(req, res, SIGNUP_FIELDS_SCHEMA);
+  joiValidate(req.body, res, SIGNUP_FIELDS_SCHEMA);
 
   const { email, name, password } = req.body;
   try {
