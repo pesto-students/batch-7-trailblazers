@@ -2,7 +2,6 @@ import Joi from '@hapi/joi';
 import Board from '../models/boardModel';
 import constants from '../config/constants';
 import { buildResponse } from '../utils/helpers';
-
 const getMembers = async function (req, res) {
   try {
     const validationSchema = Joi.object().keys({
@@ -16,14 +15,17 @@ const getMembers = async function (req, res) {
     }
 
     const boardId = req.params.id;
-    const { members } = await Board.findOne({ id: boardId }, { members: 1 }).populate(
+    const board = await Board.findOne({ id: boardId }, { members: 1 }).populate(
       'members.user',
       'name email',
     );
+    if (!board) {
+      return res.status(400).send(buildResponse(false, 'Member does not exist'));
+    }
 
-    return res.send(members);
+    return res.send(buildResponse(true, '', board.members));
   } catch (exception) {
-    return res.status(500).send(buildResponse(false, `${exception}`));
+    return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
 
@@ -57,7 +59,7 @@ const updateMemberRole = async function (req, res) {
     );
     return res.send(buildResponse(true, 'Member role updated successfully'));
   } catch (exception) {
-    return res.status(500).send(buildResponse(false, `${exception}`));
+    return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
 
@@ -78,14 +80,14 @@ const deleteMember = async function (req, res) {
     const boardId = req.params.id;
     const { member } = req.body;
     // update all issues related with member should be not assigned - pending
-    const boards = await Board.findOne({
+    const board = await Board.findOne({
       id: boardId,
       'members.user': member,
-      'members.role': { $ne: constants.ROLES_ENUM.SUPER_ADMIN },
     });
-    if (!boards || boards.length === 0) {
-      return res.status(400).send(buildResponse(false, 'Member not found or Member is superAdmin'));
+    if (!board) {
+      return res.status(400).send(buildResponse(false, 'Member does not present in board'));
     }
+    
     await Board.findOneAndUpdate(
       { id: boardId, 'members.user': member },
       { $pull: { members: { user: member } } },
@@ -93,7 +95,7 @@ const deleteMember = async function (req, res) {
 
     return res.send(buildResponse(true, 'Member deleted successfully'));
   } catch (exception) {
-    return res.status(500).send(buildResponse(false, `${exception}`));
+    return res.status(500).send(buildResponse(false, constants.SERVER_ERROR_MESSAGE));
   }
 };
 
