@@ -1,0 +1,5 @@
+.KanbanView {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 96px);
+}
