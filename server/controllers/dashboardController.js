@@ -17,7 +17,8 @@ async function addBoardToDashboard(userId, boardId) {
 }
 const addBoard = async (req, res) => {
   try {
-    joiValidate(req.body, res, ADD_BOARD);
+    const [isValid, response] = joiValidate(req.body, ADD_BOARD);
+    if (!isValid) return res.status(400).send(response);
 
     const userId = req.params.id;
     const owner = userId;
@@ -32,7 +33,7 @@ const addBoard = async (req, res) => {
     return res.status(200).send(buildResponse(true, 'successfully added Board'));
   } catch (exception) {
     console.log(exception);
-    return res.status(500).send(buildResponse(false, `Error occured, ${exception}`));
+    return res.status(500).send(buildResponse(false, `Error occurred, ${exception}`));
   }
 };
 

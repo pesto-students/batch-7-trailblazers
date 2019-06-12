@@ -18,7 +18,7 @@ describe('Dashboard screen APIs', () => {
     beforeEach(() => {
       requestBody = {
         name: 'Pesto',
-        lifecycles: ['to-do', 'in-progress', 'done'],
+        lifeCycles: ['to-do', 'in-progress', 'done'],
       };
     });
 
@@ -36,7 +36,7 @@ describe('Dashboard screen APIs', () => {
     });
 
     test('Should return 400 if board lifecycle is required not provided', (done) => {
-      requestBody.lifecycles = [];
+      requestBody.lifeCycles = [];
       request(server)
         .post('/dashboard/add')
         .send(requestBody)
@@ -68,42 +68,24 @@ describe('Dashboard screen APIs', () => {
       server.close();
       database.disconnectDB();
     });
-    const resultObject = {
-      isSuccess: true,
-      message: '',
-      data: [
-        {
-          name: 'amazon',
-          owner: {
-            _id: Object('5cf9425d064475090357aa87'),
-            name: 'manish zanzad',
-          },
-        },
-        {
-          name: 'flipkat',
-          owner: {
-            _id: Object('5cf9425d064475090357aa87'),
-            name: 'manish zanzad',
-          },
-        },
-      ],
-    };
+    const userId = '5cf9425d064475090357aa87';
 
     test('Should return 200', (done) => {
-      const dashBoard = mock(Dashboard);
-      dashBoard
-        .expects('findOne')
-        .withArgs({ userId: '5cf9425d064475090357aa87' })
-        .chain('populate')
-        .withArgs({
-          path: 'boards',
-          select: { name: 1, owner: 1 },
-          populate: {
-            path: 'owner',
-            select: { name: 1 },
-          },
-        })
-        .resolves(resultObject);
+      const findOneDashboard = stub(Dashboard, 'findOne').returns({
+        _id: 'dbbdnbd',
+        populate: () => ({
+          boards: [],
+        }),
+      });
+      const populateDashboard = stub(Dashboard.prototype, 'populate').returns({
+        boards: [],
+      });
+
+      request(server)
+        .get(`/dashboard/getboards/${userId}`)
+        .expect(200, () => {
+          findOneDashboard.restore();
+          populateDashboard.restore();
 
       request(server)
         .get('/dashboard/getboards')
