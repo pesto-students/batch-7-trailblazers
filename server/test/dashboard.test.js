@@ -68,26 +68,7 @@ describe('Dashboard screen APIs', () => {
       server.close();
       database.disconnectDB();
     });
-    const resultObject = {
-      isSuccess: true,
-      message: '',
-      data: [
-        {
-          name: 'amazon',
-          owner: {
-            _id: Object('5cf9425d064475090357aa87'),
-            name: 'manish zanzad',
-          },
-        },
-        {
-          name: 'flipkat',
-          owner: {
-            _id: Object('5cf9425d064475090357aa87'),
-            name: 'manish zanzad',
-          },
-        },
-      ],
-    };
+    const userId = '5cf9425d064475090357aa87';
 
     test('Should return 200', (done) => {
       const dashBoard = mock(Dashboard);
