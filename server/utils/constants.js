@@ -12,5 +12,6 @@ const signupFields = {
   ...loginFields,
 };
 
+export const SERVER_ERROR_MESSAGE = 'Some error occurred on server';
 export const LOGIN_FIELDS_SCHEMA = Joi.object().keys(loginFields);
 export const SIGNUP_FIELDS_SCHEMA = Joi.object().keys(signupFields);
