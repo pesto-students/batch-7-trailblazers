@@ -21,7 +21,7 @@ export default function Dashboard(props) {
   function fetchBoardList() {
     (async () => {
       try {
-        const result = await axios('${SERVER_URL}/dashboard/getboards',{
+        const result = await axios(`${SERVER_URL}/dashboard/getboards`,{
           method :'get',
           withCredentials:true,
           headers: { 'Content-Type': 'application/json' }
@@ -78,6 +78,7 @@ export default function Dashboard(props) {
         openSnackBar('error', message);
       }
     } catch (error) {
+      setIsSaving(false);
       if (error.response) {
         const { isSuccess, message } = error.response.data;
         if (!isSuccess) {
