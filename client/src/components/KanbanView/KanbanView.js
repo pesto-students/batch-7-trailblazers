@@ -12,23 +12,39 @@ const KanbanView = ({ boardId }) => {
     openSnackBar
   ]);
 
-  const getBoards = () => {
+  const requestToServer = (promise, onSuccess) => {
     (async () => {
       try {
-        const res = await axios.get(`/board/${boardId}`);
+        const res = await promise;
 
         if (!res || !res.data) throw new Error('No response from server');
         const { isSuccess, message, data } = res.data;
         if (!isSuccess) throw new Error(message);
 
-        setLifeCycles(data.lifeCycles);
+        onSuccess(data);
       } catch (err) {
         showError(err.message);
       }
     })();
   };
 
+  const getBoards = () => {
+    requestToServer(axios.get(`/board/${boardId}`), data => {
+      setLifeCycles(data.lifeCycles);
+    });
+  };
+
   useEffect(getBoards, []);
+
+  const changeLifeCycle = async (_id, finishLifeCycleName) => {
+    requestToServer(
+      axios.post(`/issue/changeLifeCycle`, {
+        _id,
+        lifeCycle: finishLifeCycleName
+      }),
+      getBoards
+    );
+  };
 
   const onDragEnd = result => {
     const { source, destination } = result;
@@ -43,16 +59,13 @@ const KanbanView = ({ boardId }) => {
     const finishLifeCycleName = destination.droppableId;
 
     const startLifeCycleName = source.droppableId;
-    const startLifeCycle = lifeCycles[startLifeCycleName];
+    const startLifeCycle = lifeCycles[startLifeCycleName].issues;
     const startIssues = Array.from(startLifeCycle);
     const issue = startIssues[source.index];
 
     if (startLifeCycleName !== finishLifeCycleName) {
       const { _id } = issue;
-      axios.post(`/issue/changeLifeCycle`, {
-        _id,
-        lifeCycle: finishLifeCycleName
-      });
+      changeLifeCycle(_id, finishLifeCycleName);
     }
   };
 
