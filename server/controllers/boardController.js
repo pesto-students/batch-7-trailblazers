@@ -4,7 +4,7 @@ import {} from '../models/issueModel';
 
 const getBoardDetails = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (Number.isNaN(parseInt(id, 10))) {
+  if (Number.isNaN(id)) {
     console.log(`${req.params.id} is not a number`);
     return res.status(400).send(buildResponse(false, 'Invalid request to get board details!'));
   }
