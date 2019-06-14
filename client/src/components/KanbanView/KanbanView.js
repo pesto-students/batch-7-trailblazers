@@ -17,8 +17,6 @@ const KanbanView = ({ boardId }) => {
       try {
         const res = await axios.get(`/board/${boardId}`);
 
-        console.log("res", res)
-
         if (!res || !res.data) throw new Error('No response from server');
         const { isSuccess, message, data } = res.data;
         if (!isSuccess) throw new Error(message);
