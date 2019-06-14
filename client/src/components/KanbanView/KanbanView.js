@@ -56,16 +56,26 @@ const KanbanView = ({ boardId }) => {
       return;
     }
 
+    const startLifeCycleName = source.droppableId;
     const finishLifeCycleName = destination.droppableId;
 
-    const startLifeCycleName = source.droppableId;
-    const startLifeCycle = lifeCycles[startLifeCycleName].issues;
-    const startIssues = Array.from(startLifeCycle);
-    const issue = startIssues[source.index];
-
     if (startLifeCycleName !== finishLifeCycleName) {
-      const { _id } = issue;
-      changeLifeCycle(_id, finishLifeCycleName);
+      const startLifeCycle = lifeCycles[startLifeCycleName].issues;
+      const startIssues = Array.from(startLifeCycle);
+      const issue = startIssues[source.index];
+      startIssues.splice(source.index, 1);
+
+      const finishLifeCycle = lifeCycles[finishLifeCycleName].issues;
+      const finishIssues = Array.from(finishLifeCycle);
+      finishIssues.push(issue);
+
+      setLifeCycles({
+        ...lifeCycles,
+        [startLifeCycleName]: startIssues,
+        [finishLifeCycleName]: finishIssues
+      });
+
+      changeLifeCycle(issue._id, finishLifeCycleName);
     }
   };
 

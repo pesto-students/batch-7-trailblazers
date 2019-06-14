@@ -1,17 +1,5 @@
 import Joi from '@hapi/joi';
 
-const loginFields = {
-  email: Joi.string()
-    .email()
-    .required(),
-  password: Joi.string().required(),
-};
-
-const signupFields = {
-  name: Joi.string(),
-  ...loginFields,
-};
-
 export const ROLES_ENUM = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
@@ -25,6 +13,18 @@ const changeLifeCycle = {
 
 const getMembers = {
   id: Joi.number().required(),
+};
+
+const loginFields = {
+  email: Joi.string()
+    .email()
+    .required(),
+  password: Joi.string().required(),
+};
+
+const signupFields = {
+  name: Joi.string(),
+  ...loginFields,
 };
 
 const updateMemberRole = {
