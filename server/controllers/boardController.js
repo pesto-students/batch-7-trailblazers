@@ -10,7 +10,6 @@ const getBoardDetails = async (req, res) => {
   }
   try {
     const [board] = await Board.find({ id }, 'lifeCycles issues').populate('issues', 'title  lifeCycle comments id');
-    console.log('data', board);
     if (!board) {
       console.log(` No board found with Id :${id}`);
       return res.status(400).send(buildResponse(false, 'Oops! Board not found'));
