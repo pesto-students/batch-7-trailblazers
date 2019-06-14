@@ -23,7 +23,10 @@ const KanbanView = ({ boardId }) => {
 
         onSuccess(data);
       } catch (err) {
-        showError(err.message);
+        if(!err.response) showError(err.message);
+
+        const { message } = err.response.data;
+        showError(message);
       }
     })();
   };
@@ -36,10 +39,10 @@ const KanbanView = ({ boardId }) => {
 
   useEffect(getBoards, []);
 
-  const changeLifeCycle = async (_id, finishLifeCycleName) => {
+  const changeLifeCycle = async (id, finishLifeCycleName) => {
     requestToServer(
       axios.post(`/issue/changeLifeCycle`, {
-        _id,
+        id,
         lifeCycle: finishLifeCycleName
       }),
       getBoards
@@ -75,7 +78,7 @@ const KanbanView = ({ boardId }) => {
         [finishLifeCycleName]: finishIssues
       });
 
-      changeLifeCycle(issue._id, finishLifeCycleName);
+      changeLifeCycle(issue.id, finishLifeCycleName);
     }
   };
 

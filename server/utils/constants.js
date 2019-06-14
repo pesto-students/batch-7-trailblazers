@@ -7,7 +7,7 @@ export const ROLES_ENUM = {
 };
 
 const changeLifeCycle = {
-  _id: Joi.string().required(),
+  id: Joi.number().required(),
   lifeCycle: Joi.string().required(),
 };
 
