@@ -22,7 +22,7 @@ export default function Dashboard(props) {
 
   async function fetchBoardList() {
     try {
-      const result = await axios('/dashboard/getboards', {
+      const result = await axios(`${SERVER_URL}/dashboard/getboards`, {
         method: 'get',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' }
@@ -62,7 +62,7 @@ export default function Dashboard(props) {
   async function saveBoardData(data) {
     try {
       const result = await axios({
-        url: `/dashboard/add`,
+        url: `${SERVER_URL}/dashboard/add`,
         method: 'post',
         data,
         withCredentials: true,
