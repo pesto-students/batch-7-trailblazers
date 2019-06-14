@@ -6,7 +6,7 @@ import database from '../config/database';
 import Board from '../models/boardModel';
 
 const boardMock = {
-  lifecycles: ['to-do', 'in-porgress', 'complete'],
+  lifeCycles: ['to-do', 'in-porgress', 'complete'],
   issues: [
     {
       _doc: {

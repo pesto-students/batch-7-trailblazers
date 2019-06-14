@@ -1,33 +1,36 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import LifeCycleColumn from '../LifeCycleColumn';
-import { SERVER_URL } from '../../config';
 import { useSnackBar } from '../../customHooks';
 import { DragDropContext } from 'react-beautiful-dnd';
 import './KanbanView.css';
 
-const KanbanView = () => {
+const KanbanView = ({ boardId }) => {
   const [lifeCycles, setLifeCycles] = useState([]);
   const { openSnackBar } = useSnackBar();
   const showError = useCallback(message => openSnackBar('error', message), [
     openSnackBar
   ]);
 
-  const getBoards = useCallback(async () => {
-    try {
-      const res = await axios.get(`${SERVER_URL}/board/`);
-      if (!res || !res.data) throw new Error('No response from server');
-      if (!res.isSuccess) throw new Error(res.data.message);
+  const getBoards = () => {
+    (async () => {
+      try {
+        const res = await axios.get(`/board/${boardId}`);
 
-      setLifeCycles(res.data.lifeCycles);
-    } catch (err) {
-      showError(err.message);
-    }
-  }, [showError]);
+        console.log("res", res)
 
-  useEffect(() => {
-    getBoards();
-  }, [getBoards]);
+        if (!res || !res.data) throw new Error('No response from server');
+        const { isSuccess, message, data } = res.data;
+        if (!isSuccess) throw new Error(message);
+
+        setLifeCycles(data.lifeCycles);
+      } catch (err) {
+        showError(err.message);
+      }
+    })();
+  };
+
+  useEffect(getBoards, []);
 
   const onDragEnd = result => {
     const { source, destination } = result;
@@ -48,7 +51,7 @@ const KanbanView = () => {
 
     if (startLifeCycleName !== finishLifeCycleName) {
       const { _id } = issue;
-      axios.post(`${SERVER_URL}/issue/changeLifeCycle`, {
+      axios.post(`/issue/changeLifeCycle`, {
         _id,
         lifeCycle: finishLifeCycleName
       });

@@ -50,7 +50,7 @@ const Issue = ({ issue = {}, index }) => {
           <span>{title}</span>
           <Box display="flex">
             <CommentOutlined className={icon} />
-            {comments.length}
+            {comments}
           </Box>
         </CardContent>
       </Card>
