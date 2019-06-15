@@ -6,28 +6,28 @@ import { SERVER_ERROR_MESSAGE } from '../utils/constants';
 
 const getBoardDetails = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
+  if (Number.isNaN(id)) {
     console.log(`${req.params.id} is not a number`);
     return res.status(400).send(buildResponse(false, 'Invalid request to get board details!'));
   }
   try {
-    const [board] = await Board.find({ id }, 'lifecycles issues').populate('issues', 'title  lifeCycle comments id');
+    const [board] = await Board.find({ id }, 'lifeCycles issues').populate('issues', 'title  lifeCycle comments id');
     if (!board) {
       console.log(` No board found with Id :${id}`);
       return res.status(400).send(buildResponse(false, 'Oops! Board not found'));
     }
-    const { lifecycles, issues } = board;
-    const responseObject = lifecycles.reduce(
+    const { lifeCycles, issues } = board;
+    const responseObject = lifeCycles.reduce(
       (acc, lc) => Object.assign(acc, { [lc]: { issues: [] } }),
       {},
     );
-    const issuesWithCommentCount = Array.from(issues).map(issue => ({
-      ...issue._doc,
-      comments: issue.comments.length,
-    }));
-    issuesWithCommentCount.forEach((issue) => {
+    issues.forEach((issue) => {
+      const issueTobeSent = {
+        ...issue._doc,
+        comments: issue.comments.length,
+      };
       const { lifeCycle } = issue;
-      responseObject[lifeCycle].issues.push(issue);
+      responseObject[lifeCycle].issues.push(issueTobeSent);
     });
     return res.status(200).send(buildResponse(true, '', { lifeCycles: responseObject }));
   } catch (err) {

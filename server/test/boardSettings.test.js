@@ -23,7 +23,7 @@ describe('Get board team members', () => {
     const resultObject = {
       id: 12,
       name: 'Satellite',
-      lifecycles: ['to-do'],
+      lifeCycles: ['to-do'],
       owner: '22',
       members: [
         {
