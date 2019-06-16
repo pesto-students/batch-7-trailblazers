@@ -1,4 +1,5 @@
 import Board from '../models/boardModel';
+import Issue from '../models/issueModel';
 import { buildResponse, joiValidate } from '../utils/helpers';
 import {
   ROLES_ENUM,
@@ -59,14 +60,13 @@ const deleteMember = async (req, res) => {
     const [isValid, response] = joiValidate({ ...req.body, id: req.params.id }, DELETE_MEMBER);
     if (!isValid) return res.status(400).send(response);
 
-    // check login user is admin or superadmin - pending
     const boardId = req.params.id;
     const { member } = req.body;
-    // update all issues related with member should be not assigned - pending
+
     const board = await Board.findOne({
       id: boardId,
       'members.user': member,
-    });
+    }).select('issues');
     if (!board) {
       return res.status(400).send(buildResponse(false, 'Member does not present in board'));
     }
@@ -76,6 +76,14 @@ const deleteMember = async (req, res) => {
       { $pull: { members: { user: member } } },
     );
 
+    // set all issues assginee related with member should be not assigned
+    if (board.issues.length > 0) {
+      await Issue.updateMany(
+        { _id: { $in: board.issues }, asignee: member },
+        { $set: { asignee: '' } }
+      );
+    }
+
     return res.send(buildResponse(true, 'Member deleted successfully'));
   } catch (exception) {
     console.log(exception);
@@ -83,4 +91,8 @@ const deleteMember = async (req, res) => {
   }
 };
 
-export default { getMembers, updateMemberRole, deleteMember };
+export default {
+  getMembers,
+  updateMemberRole,
+  deleteMember,
+};

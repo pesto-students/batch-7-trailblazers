@@ -1,11 +1,5 @@
 import Joi from '@hapi/joi';
 
-export const ROLES_ENUM = {
-  SUPER_ADMIN: 'SUPER_ADMIN',
-  ADMIN: 'ADMIN',
-  USER: 'USER',
-};
-
 const changeLifeCycle = {
   id: Joi.number().required(),
   lifeCycle: Joi.string().required(),
@@ -36,6 +30,12 @@ const updateMemberRole = {
 const deleteMember = {
   id: Joi.number().required(),
   member: Joi.string().required(),
+};
+
+export const ROLES_ENUM = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  USER: 'USER',
 };
 
 const addBoard = {
