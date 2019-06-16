@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      const errorMessage = `Email '${email}' already in use`;
+      const errorMessage = 'This email is already in use!';
       return res.status(400).send(buildResponse(false, errorMessage));
     }
     const user = new User({ name, email, password });
