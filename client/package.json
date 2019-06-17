@@ -10,6 +10,7 @@
     "enzyme-to-json": "^3.3.5",
     "js-cookie": "^2.2.0",
     "react": "^16.8.6",
+    "react-beautiful-dnd": "^11.0.4",
     "react-dom": "^16.8.6",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",

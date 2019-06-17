@@ -72,7 +72,10 @@ const Login = props => {
       Cookies.set('issue_tracker_user', response.data.data);
       props.history.push('/dashboard');
     } catch (err) {
-      showError(err.message);
+      if(!err.response) showError(err.message);
+
+      const { message } = err.response.data;
+      showError(message);
     }
   };
 
