@@ -5,11 +5,11 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: config.emailService.INVITATION_EMAIL_SENDER || 'youremail@address.com',
-    pass: config.emailService.INVITATION_EMAIL_PASSWORD || 'youtPassword',
+    pass: config.emailService.INVITATION_EMAIL_PASSWORD || 'yourPassword',
   },
 });
 
-const sendEmail = async (to, from, subject, bodyText, bodyHTML) => {
+const sendEmail = async (to, from, subject, bodyText = '', bodyHTML = '') => {
   try {
     const info = await transporter.sendMail({
       from, // sender address
