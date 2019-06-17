@@ -12,7 +12,7 @@ describe('/issue', () => {
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 1);
 
-    beforeAll(() => {
+    beforeEach(() => {
       requestBody = {
         id: 12,
         title: 'Create Project structure',

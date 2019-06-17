@@ -46,7 +46,6 @@ const changeLifeCycle = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  console.log(req.body);
   const [isValid, response] = joiValidate(req.body, UPDATE_ISSUE_DETAILS);
   if (!isValid) return res.status(400).send(response);
 
@@ -75,7 +74,7 @@ const update = async (req, res) => {
     if (!result) {
       return res.send(buildResponse(false, 'Failed to update issue details!'));
     }
-    return res.send(buildResponse(false, 'Issue details updated!'));
+    return res.send(buildResponse(true, 'Issue details updated!'));
   } catch (err) {
     console.error(err);
     return res.status(500).send(buildResponse(false, SERVER_ERROR_MESSAGE));
