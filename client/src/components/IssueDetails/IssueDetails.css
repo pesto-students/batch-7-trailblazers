@@ -2,7 +2,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  overflow: hidden;
   transform: translate(-50%, -50%);
+  max-height: calc(100vh - 32px);
 }
 
 .IssueDetails header {
@@ -10,11 +12,11 @@
   display: flex;
   align-items: center;
   padding-left: 16px;
-  border-bottom: 1px solid #dfe3e8;
-  padding-right: 16px;
+  color: #ffffff;
+  padding-right: 8px;
   justify-content: space-between;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 .IssueDetails .title-container {
@@ -23,26 +25,75 @@
 }
 
 .IssueDetails .title {
-  margin-left: 8px;
+  margin: 8px;
 }
 
 .IssueDetails .title input {
   font-size: 1.3em;
+  color: #ffffff;
 }
 
 .IssueDetails .labeled {
   background-color: rgba(0, 0, 0, 0.2);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-radius: 16px;
   padding: 8px 16px;
 }
 
 .IssueDetails .container {
   padding: 16px;
+  margin-top: 8px;
+}
+
+.IssueDetails .date-picker .MuiIconButton-root {
+  padding: 4px;
+  font-size: 1em;
+}
+.IssueDetails .date-picker .MuiOutlinedInput-input{
+  padding: 12px;
+  max-width: 128px;
 }
 
 .IssueDetails .assignee-selector {
   min-width: 120px;
+}
+
+.IssueDetails .comments-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #dfe3e8;
+}
+
+.IssueDetails .comments-container .new-comment-box fieldset {
+  background-color: #ffffff;
+}
+
+.IssueDetails .comments-container > hr {
+  width: 96%;
+}
+
+/* .IssueDetails .comments-container .comments-wrapper {
+  overflow-y: scroll;
+  height: 100%;
+} */
+
+.IssueDetails .comments-container .comment-wrapper  {
+  padding: 8px;
+  margin: 8px;
+}
+
+.IssueDetails .comments-container .comment-wrapper .comment-username {
+  color: #555555;
+  font-size: 0.7em;
+}
+
+.IssueDetails .comments-container .comment-wrapper .comment-time {
+  font-size: 0.6em;
+  color: #555555;
+}
+
+.IssueDetails .comments-container .comment-wrapper .comment-content {
+  margin-top: 4px;
+  font-size: 0.9em;
 }

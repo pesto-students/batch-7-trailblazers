@@ -1,7 +1,6 @@
 .EditableTextField input,
 .EditableTextField input:focus {
   padding: 7px;
-  color: #000000;
   border-radius: 8px;
   width: 100%;
   outline: none;
@@ -11,7 +10,7 @@
   background-color: transparent;
 }
 .EditableTextField input:focus {
-  background-color: #a0aaad;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .EditableTextField input:focus::selection {
   background: #fff3a3;

@@ -1,10 +1,11 @@
 import { useState, useContext } from 'react';
 import SnackBarContext from '../context/SnackBarContext';
 
-export const useFormInput = initialValue => {
+export const useFormInput = (initialValue, useDirectValue) => {
   const [value, setValue] = useState(initialValue);
   function onChange(e) {
-    setValue(e.target.value);
+    if (useDirectValue) setValue(e);
+    else setValue(e.target.value);
   }
   return {
     value,

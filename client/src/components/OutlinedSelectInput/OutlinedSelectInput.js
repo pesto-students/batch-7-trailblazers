@@ -11,8 +11,8 @@ const OutlinedSelectInput = ({ label, value, onChange, data, className='' }) => 
 
   useEffect(() => setLabelWidth(inputLabel.current.offsetWidth), []);
 
-  const menuItems = data.map(item => (
-    <MenuItem key={item} value={item}>
+  const menuItems = data.map((item, index) => (
+    <MenuItem key={`${index}-${item}`} value={item}>
       {item}
     </MenuItem>
   ));

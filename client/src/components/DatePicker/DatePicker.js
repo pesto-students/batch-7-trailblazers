@@ -6,7 +6,7 @@ import {
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
-const DatePicker = ({ label, value, onChange }) => {
+const DatePicker = ({ label, value, onChange, ...rest }) => {
   useEffect(() => {
     const { userLanguage, language } = window.navigator;
     const locale = userLanguage || language;
@@ -23,6 +23,7 @@ const DatePicker = ({ label, value, onChange }) => {
         value={value}
         InputAdornmentProps={{ position: 'start' }}
         onChange={onChange}
+        {...rest}
       />
     </MuiPickersUtilsProvider>
   );
