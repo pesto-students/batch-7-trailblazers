@@ -36,10 +36,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
 app.use((req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Origin', 'https://issuestracker-tb.netlify.com');
   res.set('Access-Control-Allow-Credentials', 'true');
   return next();
 });
+app.options('*', cors());
 require('./config/passport');
 
 app.use('/', router);
