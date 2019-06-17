@@ -41,11 +41,49 @@ const changeLifeCycle = async (req, res) => {
     return res.status(200).send(buildResponse(true, 'New Issue added!'));
   } catch (err) {
     console.error(err);
-    return res.status(500).send(buildResponse(false, 'Something went wrong'));
+    return res.status(500).send(buildResponse(false, SERVER_ERROR_MESSAGE));
+  }
+};
+
+const update = async (req, res) => {
+  console.log(req.body);
+  const [isValid, response] = joiValidate(req.body, UPDATE_ISSUE_DETAILS);
+  if (!isValid) return res.status(400).send(response);
+
+  try {
+    const {
+      id, title = '', dueDate, assignee, description = '', newComment,
+    } = req.body;
+
+    const updateOperation = {
+      $set: {
+        title,
+        dueDate,
+        assignee,
+        description,
+      },
+    };
+
+    if (newComment) {
+      const comment = new Comment({
+        description: newComment,
+        createdBy: req.user.name,
+      });
+      updateOperation.$push = { comments: comment };
+    }
+    const result = await Issue.findOneAndUpdate({ id }, updateOperation);
+    if (!result) {
+      return res.send(buildResponse(false, 'Failed to update issue details!'));
+    }
+    return res.send(buildResponse(false, 'Issue details updated!'));
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send(buildResponse(false, SERVER_ERROR_MESSAGE));
   }
 };
 
 module.exports = {
   getIssueDetails,
   changeLifeCycle,
+  update,
 };
