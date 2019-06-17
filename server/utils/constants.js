@@ -46,6 +46,10 @@ const addBoard = {
     .required(),
 };
 
+const getIssueDetails = {
+  id: Joi.number().required(),
+};
+
 const JoiObject = schema => Joi.object().keys(schema);
 
 export const SERVER_ERROR_MESSAGE = 'Some error occurred on server';
@@ -56,3 +60,4 @@ export const GET_MEMBERS = JoiObject(getMembers);
 export const UPDATE_MEMBER_ROLE = JoiObject(updateMemberRole);
 export const DELETE_MEMBER = JoiObject(deleteMember);
 export const ADD_BOARD = JoiObject(addBoard);
+export const GET_ISSUE_DETAILS = JoiObject(getIssueDetails);
