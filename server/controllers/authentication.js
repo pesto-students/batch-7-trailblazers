@@ -32,7 +32,7 @@ const signUp = async (req, res) => {
 const login = (req, res) => {
   req.login(req.user, (err) => {
     if (err) return res.status(500).send(buildResponse(false, SERVER_ERROR_MESSAGE));
-    return res.status(200).send(buildResponse(true, 'Login successfully!'));
+    return res.status(200).send(buildResponse(true, 'Login successfully!', {name: req.user.name, email: req.user.email}));
   });
 };
 
