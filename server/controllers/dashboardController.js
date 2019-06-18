@@ -1,7 +1,7 @@
 import Board from '../models/boardModel';
 import Dashboard from '../models/dashboardModel';
 import { buildResponse, joiValidate } from '../utils/helpers';
-import { ROLES_ENUM, ADD_BOARD } from '../utils/constants';
+import { ADD_BOARD, ROLES_ENUM } from '../utils/constants';
 
 async function addBoardToDashboard(userId, boardId) {
   try {
