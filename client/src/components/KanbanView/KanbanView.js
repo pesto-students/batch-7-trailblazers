@@ -4,6 +4,8 @@ import { SERVER_URL } from '../../config';
 import LifeCycleColumn from '../LifeCycleColumn';
 import { useSnackBar } from '../../customHooks';
 import { requestToServer } from '../../util/helper';
+import {SERVER_URL} from '../../config';
+
 import { DragDropContext } from 'react-beautiful-dnd';
 import Modal from '@material-ui/core/Modal';
 import IssueDetails from '../../components/IssueDetails/IssueDetails';
