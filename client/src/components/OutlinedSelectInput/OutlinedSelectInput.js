@@ -5,17 +5,25 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
-const OutlinedSelectInput = ({ label, value, onChange, data, className='' }) => {
+const OutlinedSelectInput = ({
+  label,
+  value,
+  onChange,
+  data,
+  className = ''
+}) => {
   const inputLabel = useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
   useEffect(() => setLabelWidth(inputLabel.current.offsetWidth), []);
 
-  const menuItems = data.map((item, index) => (
-    <MenuItem key={`${index}-${item}`} value={item}>
-      {item}
-    </MenuItem>
-  ));
+  const menuItems = data
+    ? data.map((item, index) => (
+        <MenuItem key={`${index}-${item}`} value={item}>
+          {item}
+        </MenuItem>
+      ))
+    : null;
 
   return (
     <FormControl variant="outlined" className={className}>

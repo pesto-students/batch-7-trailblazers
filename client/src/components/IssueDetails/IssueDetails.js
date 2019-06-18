@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import { Box } from '@material-ui/core';
+import Button from './../Button/Button';
 import CloseButton from '../CloseButton';
 import { SERVER_URL } from '../../config';
 import Paper from '@material-ui/core/Paper';
@@ -17,7 +19,7 @@ import './IssueDetails.css';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary,
   },
   newCommentInput: {
     color: theme.palette.primary.main,
@@ -28,12 +30,12 @@ const useStyles = makeStyles(theme => ({
 
 const CommentsList = ({ data }) => {
   const comments = data.map((comment, index) => (
-    <Paper className="comment-wrapper" key={`${comment.time}${index}`}>
+    <Paper className="comment-wrapper" key={`${comment.createdAt}${index}`}>
       <Box display="flex" justifyContent="space-between">
-        <span className="comment-username">{comment.username}</span>
-        <span className="comment-time">{comment.time}</span>
+        <span className="comment-username">{comment.createdBy}</span>
+        <span className="comment-time">{moment(comment.createdAt).fromNow()}</span>
       </Box>
-      <Box className="comment-content">{comment.content}</Box>
+      <Box className="comment-content">{comment.description}</Box>
     </Paper>
   ));
 
@@ -43,7 +45,7 @@ const CommentsList = ({ data }) => {
 const IssueDetails = ({ issueId, onClose }) => {
   const classes = useStyles();
 
-  const id = useFormInput(0);
+  const [id, setId] = useState(0);
   const title = useFormInput('Loading');
   const dueDate = useFormInput(undefined, true);
   const assignee = useFormInput('');
@@ -51,6 +53,7 @@ const IssueDetails = ({ issueId, onClose }) => {
   const description = useFormInput('');
   const [team, setTeam] = useState([]);
   const [comments, setComments] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
   const { openSnackBar, closeSnackBar } = useSnackBar();
@@ -59,13 +62,15 @@ const IssueDetails = ({ issueId, onClose }) => {
   const getIssueDetails = () => {
     setDataLoading(true);
     requestToServer(
-      axios.get(`${SERVER_URL}/issue/${issueId}`),
+      axios.get(`${SERVER_URL}/issue/${issueId}`, {
+        withCredentials: true,
+      }),
       data => {
-        id.onChange(data.id);
-        title.onChange(data.title);
-        dueDate.onChange(data.dueDate);
-        assignee.onChange(data.assignee);
-        description.onChange(data.description);
+        setId(data.id);
+        title.setNewValue(data.title);
+        dueDate.setNewValue(data.dueDate);
+        assignee.setNewValue(data.assignee);
+        description.setNewValue(data.description);
         setTeam(data.team);
         setComments(data.comments);
         setDataLoading(false);
@@ -74,14 +79,25 @@ const IssueDetails = ({ issueId, onClose }) => {
     );
   };
 
+  const handleOnNewComment = (ev) => {
+    ev.preventDefault();
+
+  }
+
   useEffect(getIssueDetails, [issueId]);
+  const handleUpdate = () => {
+
+  }
 
   return (
     <Paper className="IssueDetails">
       <header className={classes.header}>
         <div className="title-container">
-          <div className="labeled">{id.value}</div>
-          <EditableTextField className="title" {...title} />
+          <div className="labeled">{id}</div>
+          <EditableTextField
+            className="title" 
+            value={title.value}
+            onChange={title.onChange} />
         </div>
         <CloseButton onClose={onClose} />
       </header>
@@ -93,7 +109,8 @@ const IssueDetails = ({ issueId, onClose }) => {
               className="date-picker"
               disablePast
               label="Due Date"
-              {...dueDate}
+              value={dueDate.value}
+              onChange={dueDate.onChange}
             />
             <OutlinedSelectInput
               label="Assignee"
@@ -105,30 +122,37 @@ const IssueDetails = ({ issueId, onClose }) => {
           </Box>
           <div>
             <TextField
-              variant="filled"
+              variant="outlined"
               label="Description"
               rows="2"
               margin="normal"
               fullWidth
               multiline
-              {...description}
+              value={description.value}
+              onChange={description.onChange}
             />
           </div>
           <div>
             <Paper className="comments-container">
-              <TextField
-                color="primary"
-                variant="outlined"
-                placeholder="Write your comment..."
-                InputProps={{ className: classes.newCommentInput }}
-                margin="dense"
-                fullWidth
-                multiline
-                {...newComment}
-              />
+              <form onSubmit={handleOnNewComment}>
+                <TextField
+                  color="primary"
+                  variant="outlined"
+                  placeholder="Write your comment..."
+                  InputProps={{ className: classes.newCommentInput }}
+                  margin="dense"
+                  fullWidth
+                  multiline
+                  value={newComment.value}
+                  onChange={newComment.onChange}
+                />
+              </form>
               <hr />
               <CommentsList data={comments} />
             </Paper>
+          </div>
+          <div>
+            <Button loading={isSaving} onClick={handleUpdate}>Update</Button>
           </div>
         </div>
       </div>

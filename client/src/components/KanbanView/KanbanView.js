@@ -42,6 +42,8 @@ const KanbanView = ({ boardId }) => {
       axios.post(`${SERVER_URL}/issue/changeLifeCycle`, {
         id,
         lifeCycle: finishLifeCycleName
+      }, {
+        withCredential: true,
       }),
       getBoards
     );
