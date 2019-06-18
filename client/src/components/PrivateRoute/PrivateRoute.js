@@ -49,10 +49,8 @@ function PrivateRoute({ component: Component, ...rest }) {
 }
 
 // Intercept each axios request
-axios.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  if(error.response.status === 403){
+axios.interceptors.response.use(res => res, function (error) {
+  if(error.response && error.response.status === 403){
     Auth.logout();
     alert('Session Expired, Redirecting to login...');
     window.location.href = '/login'; 

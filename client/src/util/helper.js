@@ -10,9 +10,10 @@ export const requestToServer = (promise, onSuccess, onError) => {
       onSuccess(data, message);
     } catch (err) {
       if (!err.response) onError(err.message);
-
-      const { message } = err.response.data;
-      onError(message);
+      else {
+        const { message } = err.response.data;
+        onError(message);
+      }
     }
   })();
 };

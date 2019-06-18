@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@material-ui/core';
 import CloseButton from '../CloseButton';
+import { SERVER_URL } from '../../config';
 import Paper from '@material-ui/core/Paper';
 import { useFormInput } from '../../customHooks';
 import TextField from '@material-ui/core/TextField';
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => ({
   newCommentInput: {
     color: theme.palette.primary.main,
     backgroundColor: '#ffffff',
+    borderRadius: 4,
   }
 }));
 
@@ -43,7 +45,7 @@ const IssueDetails = ({ issueId, onClose }) => {
 
   const id = useFormInput(0);
   const title = useFormInput('Loading');
-  const dueDate = useFormInput(new Date(), true);
+  const dueDate = useFormInput(undefined, true);
   const assignee = useFormInput('');
   const newComment = useFormInput('');
   const description = useFormInput('');
@@ -57,7 +59,7 @@ const IssueDetails = ({ issueId, onClose }) => {
   const getIssueDetails = () => {
     setDataLoading(true);
     requestToServer(
-      axios.get(`/issue/${issueId}`),
+      axios.get(`${SERVER_URL}/issue/${issueId}`),
       data => {
         id.onChange(data.id);
         title.onChange(data.title);
@@ -76,14 +78,14 @@ const IssueDetails = ({ issueId, onClose }) => {
 
   return (
     <Paper className="IssueDetails">
-      {dataLoading && <LinearProgress />}
       <header className={classes.header}>
         <div className="title-container">
-          <div className="labeled">{id}</div>
+          <div className="labeled">{id.value}</div>
           <EditableTextField className="title" {...title} />
         </div>
         <CloseButton onClose={onClose} />
       </header>
+      {dataLoading && <LinearProgress />}
       <div className="container">
         <div>
           <Box display="flex" justifyContent="space-between">

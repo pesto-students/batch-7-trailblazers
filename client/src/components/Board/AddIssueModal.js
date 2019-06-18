@@ -9,6 +9,7 @@ import { useFormInput } from './../../customHooks';
 import axios from 'axios';
 import { useSnackBar } from './../../customHooks';
 import { SERVER_URL } from './../../config';
+import { requestToServer } from '../../util/helper';
 
 const AddIssueModal = props => {
   const [open, setOpen] = useState(true);
@@ -23,11 +24,8 @@ const AddIssueModal = props => {
   const [dueDate, setDueDate] = useState('');
   const [boardMembers, setBoardMembers] = useState([]);
   const { openSnackBar } = useSnackBar();
-  useEffect(() => {
-    fetchBoardMembers();
-  }, [props]);
   const boardId = props.boardId;
-
+  
   const handleOnSubmit = event => {
     event.preventDefault();
     if (!title.value) {
@@ -41,19 +39,19 @@ const AddIssueModal = props => {
       dueDate: dueDate
     });
   };
-
-  async function fetchBoardMembers() {
-    try {
-      const result = await axios(`${SERVER_URL}/board/members/${boardId}`, {
+  
+  function fetchBoardMembers() {
+    requestToServer(
+      axios(`${SERVER_URL}/board/members/${boardId}`, {
         withCredentials: true,
-      });
-      setBoardMembers(result.data.data);
-    }
-    catch(error){
-      const { message } = error.response.data;
-        openSnackBar('error', message);
-    }
+      }),
+      (data) => {
+        // setBoardMembers(data)
+      },
+      (message) => openSnackBar('error', message)
+    )
   }
+  useEffect(fetchBoardMembers, []);
 
   const addIssue = async (data) => {
     try {
