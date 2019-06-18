@@ -16,9 +16,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const IssueList = React.memo(({ issues }) =>
+const IssueList = React.memo(({ issues, ...rest }) =>
   issues.map((issue, index) => (
-    <Issue key={issue.id} issue={issue} index={index} />
+    <Issue key={issue.id} issue={issue} index={index} {...rest} />
   ))
 );
 
@@ -33,7 +33,7 @@ const DroppableContainer = ({ id, children, className = '' }) => (
   </Droppable>
 );
 
-const LifeCycleColumn = ({ title, issues = [] }) => {
+const LifeCycleColumn = ({ title, issues = [], ...rest }) => {
   const { header, IssuesContainer } = useStyles();
   return (
     <div className="LifeCycleColumn">
@@ -41,7 +41,7 @@ const LifeCycleColumn = ({ title, issues = [] }) => {
         {title}
       </Typography>
       <DroppableContainer className={IssuesContainer} id={title}>
-        <IssueList issues={issues} />
+        <IssueList issues={issues} {...rest} />
       </DroppableContainer>
     </div>
   );

@@ -3,6 +3,8 @@ import axios from 'axios';
 import LifeCycleColumn from '../LifeCycleColumn';
 import { useSnackBar } from '../../customHooks';
 import { DragDropContext } from 'react-beautiful-dnd';
+import Modal from '@material-ui/core/Modal';
+import IssueDetails from '../../components/IssueDetails/IssueDetails';
 import './KanbanView.css';
 
 const KanbanView = ({ boardId }) => {
@@ -11,6 +13,15 @@ const KanbanView = ({ boardId }) => {
   const showError = useCallback(message => openSnackBar('error', message), [
     openSnackBar
   ]);
+
+  const [issueId, setIssueId] = useState();
+  const [openIssueDetails, setOpenIssueDetails] = useState(true);
+
+  const openModalIssueDetails = (id) => {
+    setIssueId(id);
+    openIssueDetails(true);
+  }
+  const onIssueModalClose = () => setOpenIssueDetails(false);
 
   const requestToServer = (promise, onSuccess) => {
     (async () => {
@@ -83,15 +94,28 @@ const KanbanView = ({ boardId }) => {
   };
 
   const lifeCycleColumns = Object.entries(lifeCycles).map(([key, value]) => (
-    <LifeCycleColumn key={key} title={key} issues={value.issues} />
+    <LifeCycleColumn key={key} title={key} issues={value.issues} openModalIssueDetails={openModalIssueDetails} />
   ));
 
   return (
+    <>
     <div className="KanbanView">
       <DragDropContext onDragEnd={onDragEnd}>
         {lifeCycleColumns}
       </DragDropContext>
     </div>
+
+    <Modal
+        aria-labelledby="issue-details"
+        aria-describedby="issue-details"
+        open={openIssueDetails}
+        onClose={onIssueModalClose}
+      >
+        <div className="issueDetails-container">
+          { openIssueDetails && <IssueDetails issueId={issueId} onClose={onIssueModalClose} /> }
+        </div>
+      </Modal>
+    </>
   );
 };
 
