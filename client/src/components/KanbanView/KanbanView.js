@@ -41,13 +41,17 @@ const KanbanView = ({ boardId }) => {
 
   const changeLifeCycle = async (id, finishLifeCycleName) => {
     requestToServer(
-      axios.post(`${SERVER_URL}/issue/changeLifeCycle`, {
-        id,
-        lifeCycle: finishLifeCycleName
-      }, {
+      axios({
+        method: 'post',
+        url: `${SERVER_URL}/issue/changeLifeCycle`,
+        data: {
+          id,
+          lifeCycle: finishLifeCycleName
+        },
         withCredential: true,
       }),
-      getBoards
+      getBoards,
+      showError
     );
   };
 
