@@ -1,53 +1,60 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import axios from 'axios';
+import { SERVER_URL } from '../../config';
 import LifeCycleColumn from '../LifeCycleColumn';
 import { useSnackBar } from '../../customHooks';
-import {SERVER_URL} from '../../config';
-
+import { requestToServer } from '../../util/helper';
 import { DragDropContext } from 'react-beautiful-dnd';
+import Modal from '@material-ui/core/Modal';
+import IssueDetails from '../../components/IssueDetails/IssueDetails';
 import './KanbanView.css';
 
-const KanbanView = ({ boardId }) => {
+const KanbanView = forwardRef(({ boardId }, ref) => {
   const [lifeCycles, setLifeCycles] = useState([]);
   const { openSnackBar } = useSnackBar();
   const showError = useCallback(message => openSnackBar('error', message), [
     openSnackBar
   ]);
 
-  const requestToServer = (promise, onSuccess) => {
-    (async () => {
-      try {
-        const res = await promise;
+  const [issueId, setIssueId] = useState();
+  const [openIssueDetails, setOpenIssueDetails] = useState(false);
+  useImperativeHandle(ref, () => ({
+    refreshBoard() {
+      getBoards();
+    }
+  }));
 
-        if (!res || !res.data) throw new Error('No response from server');
-        const { isSuccess, message, data } = res.data;
-        if (!isSuccess) throw new Error(message);
-
-        onSuccess(data);
-      } catch (err) {
-        if(!err.response) showError(err.message);
-
-        const { message } = err.response.data;
-        showError(message);
-      }
-    })();
+  const openModalIssueDetails = id => {
+    setIssueId(id);
+    setOpenIssueDetails(true);
   };
+  const onIssueModalClose = () => setOpenIssueDetails(false);
 
   const getBoards = () => {
-    requestToServer(axios.get(`${SERVER_URL}/board/${boardId}`), data => {
-      setLifeCycles(data.lifeCycles);
-    });
+    requestToServer(
+      axios.get(`${SERVER_URL}/board/${boardId}`),
+      data => {
+        setLifeCycles(data.lifeCycles);
+      },
+      showError
+    );
   };
 
   useEffect(getBoards, []);
 
   const changeLifeCycle = async (id, finishLifeCycleName) => {
     requestToServer(
-      axios.post(`/issue/changeLifeCycle`, {
-        id,
-        lifeCycle: finishLifeCycleName
+      axios({
+        method: 'post',
+        url: `${SERVER_URL}/issue/changeLifeCycle`,
+        data: {
+          id,
+          lifeCycle: finishLifeCycleName
+        },
+        withCredential: true,
       }),
-      getBoards
+      getBoards,
+      showError
     );
   };
 
@@ -85,16 +92,36 @@ const KanbanView = ({ boardId }) => {
   };
 
   const lifeCycleColumns = Object.entries(lifeCycles).map(([key, value]) => (
-    <LifeCycleColumn key={key} title={key} issues={value.issues} />
+    <LifeCycleColumn
+      key={key}
+      title={key}
+      issues={value.issues}
+      openModalIssueDetails={openModalIssueDetails}
+    />
   ));
 
   return (
-    <div className="KanbanView">
-      <DragDropContext onDragEnd={onDragEnd}>
-        {lifeCycleColumns}
-      </DragDropContext>
-    </div>
+    <>
+      <div className="KanbanView">
+        <DragDropContext onDragEnd={onDragEnd}>
+          {lifeCycleColumns}
+        </DragDropContext>
+      </div>
+
+      <Modal
+        aria-labelledby="issue-details"
+        aria-describedby="issue-details"
+        open={openIssueDetails}
+        onClose={onIssueModalClose}
+      >
+        <div className="issueDetails-container">
+          {openIssueDetails && (
+            <IssueDetails issueId={issueId} onClose={onIssueModalClose} />
+          )}
+        </div>
+      </Modal>
+    </>
   );
-};
+});
 
 export default KanbanView;

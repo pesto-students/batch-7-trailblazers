@@ -8,6 +8,7 @@ import { useFormInput } from './../../customHooks';
 import axios from 'axios';
 import { useSnackBar } from './../../customHooks';
 import { SERVER_URL } from './../../config';
+import { requestToServer } from '../../util/helper';
 
 const AddIssueModal = props => {
   const [isSaving, setIsSaving] = useState(false);
@@ -21,11 +22,8 @@ const AddIssueModal = props => {
   const [dueDate, setDueDate] = useState('');
   const [boardMembers, setBoardMembers] = useState([]);
   const { openSnackBar } = useSnackBar();
-  useEffect(() => {
-    fetchBoardMembers();
-  }, [props]);
   const boardId = props.boardId;
-
+  
   const handleOnSubmit = event => {
     event.preventDefault();
     if (!title.value) {
@@ -39,21 +37,18 @@ const AddIssueModal = props => {
       dueDate: dueDate
     });
   };
-
-  async function fetchBoardMembers() {
-    try {
-      const result = await axios(`${SERVER_URL}/board/members/${boardId}`, {
+  
+  function fetchBoardMembers() {
+    requestToServer(
+      axios(`${SERVER_URL}/board/members/${boardId}`, {
         withCredentials: true,
-      });
-      setBoardMembers(result.data.data);
-    }
-    catch(error){
-      if(error.response) {
-      const { message } = error.response.data;
-        openSnackBar('error', message);
-      }
-    }
+      }),
+      setBoardMembers,
+      (message) => openSnackBar('error', message)
+    )
   }
+
+  useEffect(fetchBoardMembers, []);
 
   const addIssue = async (data) => {
     try {
@@ -122,6 +117,7 @@ const AddIssueModal = props => {
               required
               {...title}
               inputProps={{ maxLength: '100' }}
+              variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
@@ -134,6 +130,7 @@ const AddIssueModal = props => {
               fullWidth
               {...description}
               inputProps={{ maxLength: '500' }}
+              variant="outlined"
             />
           </Grid>
         </Grid>
@@ -147,6 +144,7 @@ const AddIssueModal = props => {
               margin="normal"
               fullWidth
               {...assignee}
+              variant="outlined"
             >
               {
                 boardMembers.map( (member, index) => {

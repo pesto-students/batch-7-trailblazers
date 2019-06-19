@@ -41,6 +41,7 @@ const Button = ({
   loading = false,
   success = false,
   disable = false,
+  color = 'primary',
   ...rest
 }) => {
   const {
@@ -61,7 +62,9 @@ const Button = ({
           variant={variant}
           className={buttonClassName}
           disabled={loading || disable}
+          color={color}
           {...rest}
+          color="primary"
         >
           {success && <CheckIcon />}
           {loading
