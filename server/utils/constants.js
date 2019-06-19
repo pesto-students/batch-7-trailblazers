@@ -62,7 +62,7 @@ const updateIssueDetails = {
   dueDate: Joi.date(),
   assignee: Joi.string(),
   description: Joi.string(),
-  newComment: Joi.string(),
+  newComments: Joi.array().items(Joi.string().required()),
 };
 
 const JoiObject = schema => Joi.object().keys(schema);
