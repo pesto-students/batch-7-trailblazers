@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from '../../config';
 import LifeCycleColumn from '../LifeCycleColumn';
@@ -9,7 +9,7 @@ import Modal from '@material-ui/core/Modal';
 import IssueDetails from '../../components/IssueDetails/IssueDetails';
 import './KanbanView.css';
 
-const KanbanView = ({ boardId }) => {
+const KanbanView = forwardRef(({ boardId }, ref) => {
   const [lifeCycles, setLifeCycles] = useState([]);
   const { openSnackBar } = useSnackBar();
   const showError = useCallback(message => openSnackBar('error', message), [
@@ -18,6 +18,11 @@ const KanbanView = ({ boardId }) => {
 
   const [issueId, setIssueId] = useState();
   const [openIssueDetails, setOpenIssueDetails] = useState(false);
+  useImperativeHandle(ref, () => ({
+    refreshBoard() {
+      getBoards();
+    }
+  }));
 
   const openModalIssueDetails = id => {
     setIssueId(id);
@@ -117,6 +122,6 @@ const KanbanView = ({ boardId }) => {
       </Modal>
     </>
   );
-};
+});
 
 export default KanbanView;
