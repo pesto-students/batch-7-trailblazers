@@ -7,13 +7,9 @@ export const useFormInput = (initialValue, useDirectValue) => {
     if (useDirectValue) setValue(e);
     else setValue(e.target.value);
   }
-  function setNewValue(val) {
-    setValue(val);
-  }
   return {
     value,
     onChange,
-    setNewValue,
   };
 };
 

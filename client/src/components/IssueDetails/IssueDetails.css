@@ -62,7 +62,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #dfe3e8;
 }
 
 .IssueDetails .comments-container .new-comment-box fieldset {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import Cookies from 'js-cookie';
 import { Box } from '@material-ui/core';
 import Button from './../Button/Button';
 import CloseButton from '../CloseButton';
@@ -19,12 +20,15 @@ import './IssueDetails.css';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    backgroundColor: theme.palette.primary,
+    backgroundColor: theme.palette.primary.main
   },
   newCommentInput: {
     color: theme.palette.primary.main,
     backgroundColor: '#ffffff',
-    borderRadius: 4,
+    borderRadius: 4
+  },
+  commentsContainer: {
+    backgroundColor: '#dce1ff'
   }
 }));
 
@@ -33,7 +37,9 @@ const CommentsList = ({ data }) => {
     <Paper className="comment-wrapper" key={`${comment.createdAt}${index}`}>
       <Box display="flex" justifyContent="space-between">
         <span className="comment-username">{comment.createdBy}</span>
-        <span className="comment-time">{moment(comment.createdAt).fromNow()}</span>
+        <span className="comment-time">
+          {moment(comment.createdAt).fromNow()}
+        </span>
       </Box>
       <Box className="comment-content">{comment.description}</Box>
     </Paper>
@@ -56,21 +62,22 @@ const IssueDetails = ({ issueId, onClose }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
-  const { openSnackBar, closeSnackBar } = useSnackBar();
+  const { openSnackBar } = useSnackBar();
   const showError = message => openSnackBar('error', message);
 
+  const targetValue = val => ({ target: { value: val } });
   const getIssueDetails = () => {
     setDataLoading(true);
     requestToServer(
       axios.get(`${SERVER_URL}/issue/${issueId}`, {
-        withCredentials: true,
+        withCredentials: true
       }),
       data => {
         setId(data.id);
-        title.setNewValue(data.title);
-        dueDate.setNewValue(data.dueDate);
-        assignee.setNewValue(data.assignee);
-        description.setNewValue(data.description);
+        setNewValue(title, data.title);
+        dueDate.onChange(data.dueDate);
+        setNewValue(assignee, data.assignee);
+        setNewValue(description, data.description);
         setTeam(data.team);
         setComments(data.comments);
         setDataLoading(false);
@@ -79,25 +86,48 @@ const IssueDetails = ({ issueId, onClose }) => {
     );
   };
 
-  const handleOnNewComment = (ev) => {
+  const setNewValue = (target, value) => target.onChange(targetValue(value));
+
+  const handleOnNewComment = ev => {
     ev.preventDefault();
 
-  }
+    const { name } = Cookies.getJSON('issue_tracker_user');
+    const comment = {
+      description: newComment.value,
+      createdBy: name,
+      createdAt: new Date()
+    };
+
+    setComments([comment, ...comments]);
+    setNewValue(newComment, '');
+  };
 
   useEffect(getIssueDetails, [issueId]);
   const handleUpdate = () => {
-
-  }
+    setIsSaving(true);
+    requestToServer(
+      axios.post(
+        `${SERVER_URL}/issue/update/`,
+        { id: issueId, title, dueDate, assignee, description, comments },
+        { withCredentials: true }
+      ),
+      () => {
+        setIsSaving(false);
+        onClose();
+      },
+      (errMessage) => {
+        showError(errMessage);
+        setIsSaving(false);
+      }
+    );
+  };
 
   return (
     <Paper className="IssueDetails">
       <header className={classes.header}>
         <div className="title-container">
           <div className="labeled">{id}</div>
-          <EditableTextField
-            className="title" 
-            value={title.value}
-            onChange={title.onChange} />
+          <EditableTextField className="title" {...title} />
         </div>
         <CloseButton onClose={onClose} />
       </header>
@@ -109,15 +139,14 @@ const IssueDetails = ({ issueId, onClose }) => {
               className="date-picker"
               disablePast
               label="Due Date"
-              value={dueDate.value}
-              onChange={dueDate.onChange}
+              {...dueDate}
             />
             <OutlinedSelectInput
               label="Assignee"
-              {...assignee}
               data={team}
               selected={assignee}
               className="assignee-selector"
+              {...assignee}
             />
           </Box>
           <div>
@@ -128,12 +157,13 @@ const IssueDetails = ({ issueId, onClose }) => {
               margin="normal"
               fullWidth
               multiline
-              value={description.value}
-              onChange={description.onChange}
+              {...description}
             />
           </div>
           <div>
-            <Paper className="comments-container">
+            <Paper
+              className={`${classes.commentsContainer} comments-container`}
+            >
               <form onSubmit={handleOnNewComment}>
                 <TextField
                   color="primary"
@@ -143,19 +173,30 @@ const IssueDetails = ({ issueId, onClose }) => {
                   margin="dense"
                   fullWidth
                   multiline
-                  value={newComment.value}
-                  onChange={newComment.onChange}
+                  {...newComment}
                 />
+                {newComment.value && (
+                  <Button type="submit" color="secondary">
+                    Save
+                  </Button>
+                )}
               </form>
               <hr />
               <CommentsList data={comments} />
             </Paper>
           </div>
-          <div>
-            <Button loading={isSaving} onClick={handleUpdate}>Update</Button>
-          </div>
         </div>
       </div>
+      <Box m={1} display="flex" flexDirection="row-reverse">
+        <Button
+          m={5}
+          loading={isSaving}
+          onClick={handleUpdate}
+          color="secondary"
+        >
+          Update
+        </Button>
+      </Box>
     </Paper>
   );
 };

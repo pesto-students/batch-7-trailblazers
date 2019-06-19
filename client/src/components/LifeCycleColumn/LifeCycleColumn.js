@@ -7,7 +7,7 @@ import './LifeCycleColumn.css';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
     padding: '8px',
     color: '#ffffff'
   },

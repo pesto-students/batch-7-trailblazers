@@ -4,13 +4,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import './OutlinedSelectInput.css';
 
 const OutlinedSelectInput = ({
   label,
-  value,
-  onChange,
   data,
-  className = ''
+  className = '',
+  ...rest
 }) => {
   const inputLabel = useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
@@ -31,8 +31,6 @@ const OutlinedSelectInput = ({
         {label}
       </InputLabel>
       <Select
-        value={value}
-        onChange={onChange}
         input={
           <OutlinedInput
             labelWidth={labelWidth}
@@ -40,8 +38,9 @@ const OutlinedSelectInput = ({
             id={`select-${label}`}
           />
         }
+        {...rest}
       >
-        <MenuItem value="">
+        <MenuItem value="" disabled>
           <em>None</em>
         </MenuItem>
         {menuItems}
