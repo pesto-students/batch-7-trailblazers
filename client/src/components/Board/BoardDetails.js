@@ -8,6 +8,7 @@ import { useSnackBar } from '../../customHooks';
 import Modal from './../CommonComponents/Modal';
 import constants from './../../constants';
 import { useFormInput } from '../../customHooks';
+import AppMenu from '../AppMenu/AppMenu';
 import {
   Icon,
   Popover,
@@ -17,7 +18,6 @@ import {
   Box,
   TextField
 } from '@material-ui/core';
-import HeaderWithUserAvatar from '../HeaderWithUserAvatar';
 
 const BoardDetails = props => {
   const boardId = props.match.params.id;
@@ -85,23 +85,50 @@ const BoardDetails = props => {
 
   return (
     <Fragment>
-      <HeaderWithUserAvatar name={boardName}>
-        <Button onClick={() => setOpenIssueModal(true)}>
-          <Icon>add</Icon>New Issue
-        </Button>
+      <AppMenu title={boardName}>
+        <div style={{ float: 'right' }}>
+          <Icon
+            style={{ fontSize: 30, float: 'right', cursor: 'pointer' }}
+            onClick={handleSettingClick}
+          >
+            settings
+          </Icon>
+          <div className="app-menu-button">
+            <Button onClick={() => setOpenIssueModal(true)}>
+              <Icon>add</Icon>New Issue
+            </Button>
+          </div>
+          {userRole === USER || (
+            <div className="app-menu-button">
+              <Button onClick={handleClickOpenInviteDialog}>
+                <Icon>add</Icon>Invite
+              </Button>
+            </div>
+          )}
+        </div>
 
-        {userRole === USER || (
-          <Button onClick={handleClickOpenInviteDialog}>
-            <Icon>add</Icon>Invite
-          </Button>
-        )}
-        <Icon
-          style={{ fontSize: 30, float: 'right', cursor: 'pointer' }}
-          onClick={handleSettingClick}
+        <Popover
+          open={openSetting}
+          onClose={() => {
+            setSettingAnchorEl(null);
+          }}
+          anchorEl={settingAnchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
         >
-          settings
-        </Icon>
-      </HeaderWithUserAvatar>
+          <List component="nav" aria-label="Mailbox folders">
+            <ListItem onClick={goToMembers} button>
+              <ListItemText primary="Members" />
+            </ListItem>
+          </List>
+        </Popover>
+      </AppMenu>
       <Popover
         open={openSetting}
         onClose={() => setSettingAnchorEl(null)}
@@ -140,16 +167,18 @@ const BoardDetails = props => {
         />
         <div style={{ marginTop: '10px' }}>
           <div className="float-right">
-            <Button onClick={handleSaveInvite} color="primary">
+            <Button onClick={handleSaveInvite} color="secondary">
               Invite
             </Button>
           </div>
           <div className="float-right">
-            <Button onClick={handleCloseInviteDialog}>Cancel</Button>
+            <Button color="secondary" onClick={handleCloseInviteDialog}>
+              Cancel
+            </Button>
           </div>
         </div>
       </Modal>
-      <Box m={1}>
+      <Box m={1} flexGrow="1">
         <KanbanView
           ref={kanbanReference}
           boardId={props.match.params.id}

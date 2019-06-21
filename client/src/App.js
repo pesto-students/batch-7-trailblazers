@@ -10,12 +10,14 @@ import MemberList from './components/Board/Settings/MembersList';
 import PrivateRoute from './components/PrivateRoute';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme';
+import HeaderWithUserAvatar from './components/HeaderWithUserAvatar';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <SnackBarProvider>
         <div className="App">
+          <HeaderWithUserAvatar />
           <Switch>
             <PrivateRoute exact path="/login" component={Login} />
             <PrivateRoute exact path="/signup" component={Signup} />

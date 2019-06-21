@@ -34,7 +34,6 @@ const HeaderWithUserAvatar = ({ name = '', children, ...rest }) => {
   return (
     <Header
       name={name}
-      className="headerWithUserIcon"
       {...rest}
     >
       <Box display="flex" alignItems="center">

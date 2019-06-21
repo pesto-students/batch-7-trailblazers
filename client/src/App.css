@@ -44,11 +44,11 @@
   font-size: 12px;
 }
 
-/* .app-menu-button {
+.app-menu-button {
   margin-top: -18px;
   height: 35px;
   display: inline-block;
-} */
+}
 
 .labelId { 
   background-color: rgba(0, 0, 0, 0.2);

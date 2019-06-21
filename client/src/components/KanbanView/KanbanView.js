@@ -136,6 +136,7 @@ const KanbanView = forwardRef(({ boardId, setBoardName }, ref) => {
       </div>
 
       <Modal
+        disableBackdropClick
         aria-labelledby="issue-details"
         aria-describedby="issue-details"
         open={openIssueDetails}

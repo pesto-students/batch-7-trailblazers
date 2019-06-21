@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import logo from './../../assets/grootlogo.png';
+import logo from '../../assets/grootlogo.png';
 const useStyles = makeStyles(theme => ({
   rightAligned: {
     position: 'absolute',
@@ -11,21 +11,14 @@ const useStyles = makeStyles(theme => ({
   },
   spacing: {
     right: theme.spacing(2)
-  },
-  marginBottom: {
-    marginBottom: '20px'
   }
 }));
 
-function Header({ name = '', children, className = '', ...rest }) {
+function Header({ name = '', children, ...rest }) {
   const classes = useStyles();
 
   return (
-    <AppBar
-      position="static"
-      className={`${classes.marginBottom} ${className}`}
-      {...rest}
-    >
+    <AppBar position="static" {...rest}>
       <Toolbar>
         <Typography variant="h6" color="inherit">
           {name}

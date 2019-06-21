@@ -4,7 +4,7 @@ import lightBlue from '@material-ui/core/colors/lightBlue';
 
 export default createMuiTheme({
   palette: {
-    primary: lightBlue,
+    primary: teal,
     secondary: {
       light: '#ffe597',
       main: '#fdd150',

@@ -166,12 +166,12 @@ const AddIssueModal = props => {
         </Grid>
         <div style={{ marginTop: '10px' }}>
           <div className="float-right">
-            <Button loading={isSaving} type="submit">
+            <Button loading={isSaving} color="secondary" type="submit">
               Save
             </Button>
           </div>
           <div className="float-right">
-            <Button onClick={props.handleClose}>Close</Button>
+            <Button color="secondary" onClick={props.handleClose}>Close</Button>
           </div>
         </div>
       </form>

@@ -7,7 +7,6 @@ import AddBoardForm from './AddBoardForm';
 import axios from 'axios';
 import { useSnackBar } from '../../customHooks';
 import theme from '../../theme';
-import HeaderWithUserAvatar from '../HeaderWithUserAvatar';
 
 const PRIMARY_MAIN = theme.palette.primary.main;
 
@@ -140,8 +139,6 @@ export default function Dashboard(props) {
 
   return (
     <Fragment>
-      <HeaderWithUserAvatar name="Dashboard" />
-
       <BoardsContainer
         title="Personal"
         boardList={ownBoards}
