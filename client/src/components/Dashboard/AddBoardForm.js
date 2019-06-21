@@ -95,7 +95,7 @@ export default function AddBoardForm(props) {
         <Grid container>
           <Grid item xs={12}>
             {error.show ? (
-              <label className="eror-msg">{error.message}</label>
+              <label className="error-msg">{error.message}</label>
             ) : (
               ""
             )}

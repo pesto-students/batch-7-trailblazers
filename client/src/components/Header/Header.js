@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,26 +17,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Header({ name = '', children }) {
+function Header({ name = '', children, className = '', ...rest }) {
   const classes = useStyles();
 
   return (
-    <div>
-      <AppBar
-        position="static"
-        className={classes.marginBottom}
-      >
-        <Toolbar>
-          <img width="150px" src={logo}/>
-         
-          <div className={classes.rightAligned}>
-            {React.Children.map(children, child => {
-              return React.cloneElement(child, { className: classes.spacing });
-            })}
-          </div>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar
+      position="static"
+      className={`${classes.marginBottom} ${className}`}
+      {...rest}
+    >
+      <Toolbar>
+        <Typography variant="h6" color="inherit">
+          {name}
+        </Typography>
+        <img width="150px" alt="Groot" src={logo} />
+        <div className={classes.rightAligned}>{children}</div>
+      </Toolbar>
+    </AppBar>
   );
 }
 

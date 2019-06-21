@@ -54,7 +54,7 @@ const KanbanView = forwardRef(({ boardId, setBoardName }, ref) => {
     showSuccess(message);
     onIssueModalClose();
     getBoardsData();
-  }
+  };
 
   const getBoardsData = () => {
     requestToServer(
