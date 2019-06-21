@@ -5,6 +5,7 @@
   overflow: hidden;
   transform: translate(-50%, -50%);
   max-height: calc(100vh - 32px);
+  min-width: 360px;
 }
 
 .IssueDetails header {
