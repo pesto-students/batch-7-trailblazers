@@ -44,7 +44,7 @@
   margin-top: 8px;
 }
 
-.IssueDetails .date-picker label {
+.IssueDetails .date-picker label[data-shrink='false'] {
   transform: translate(14px, 15px) scale(1);
 }
 
